@@ -41,7 +41,17 @@ jobs:
     name: Run tests
     strategy:
       matrix:
+        browser: [chrome, firefox, edge, safari]
         os: [ ubuntu-latest, macos-latest ]
+        exclude:
+          - browser: chrome
+            os: macos-latest
+          - browser: firefox
+            os: macos-latest
+          - browser: edge
+            os: macos-latest
+          - browser: safari
+            os: ubuntu-latest
         include:
           - browser: chrome
             os: ubuntu-latest
@@ -66,7 +76,7 @@ jobs:
       - name: Checkout test repository
         uses: actions/checkout@v4
         with:
-          repository: Simeon-Zografov/test-repo
+          repository: Simeon-Zografov/QUBA_WEB
 
       - name: Set up Python
         uses: actions/setup-python@v5
