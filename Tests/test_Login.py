@@ -1,0 +1,80 @@
+import allure
+import pytest
+from pytest_check import check
+from allure import severity, severity_level
+from Pages.HomePage import HomePage
+from Pages.LoginPage import Login
+from Common.BaseClass import BaseClass
+
+
+@pytest.mark.parametrize("driver", BaseClass.browsers, indirect=True)
+@pytest.mark.flaky(reruns=5, reruns_delay=0.5, rerun_except="assert")
+class TestLogin(BaseClass):
+
+    @severity(severity_level.CRITICAL)
+    @allure.feature('Login')
+    @allure.title("User is navigated to the Login page")
+    def test_1(self, driver):
+        home_page_obj = HomePage(driver)
+        login_obj = Login(driver)
+        driver.get(BaseClass.url)
+        home_page_obj.wait_page_to_load()
+        with check, allure.step("Check the page title"):
+            home_page_obj.click_login_button()
+            assert login_obj.is_login_page_title_visible()
+
+    @severity(severity_level.NORMAL)
+    @allure.feature('Login')
+    @allure.title("Unsuccessfully login with email: {email} and password: {password}")
+    @pytest.mark.parametrize('email,password,error', [
+        (BaseClass.email[:-1], BaseClass.password, "There was a problem logging you in. Please try again."),
+        (BaseClass.email, BaseClass.password[:-1], "There was a problem logging you in. Please try again."),
+        (BaseClass.email.replace("@", ""), BaseClass.password, "Please enter a valid email"),
+        ("", BaseClass.password, "Please enter your email"),
+        (BaseClass.email, "", "Please enter your password")
+    ])
+    def test_2(self, driver, email, password, error):
+        login_obj = Login(driver)
+        driver.refresh()
+        login_obj.set_email_field(email)
+        login_obj.set_password_field(password)
+        with check, allure.step("Check for error"):
+            if "Please enter" in error:
+                assert login_obj.is_filed_error_message_visible()
+            else:
+                login_obj.click_login_button()
+                assert login_obj.is_credentials_error_message_visible()
+        with check, allure.step("Check the error text"):
+            if "Please enter" in error:
+                assert login_obj.get_field_error_message_text() == error
+            else:
+                assert login_obj.get_credentials_error_message_text() == error
+
+    @severity(severity_level.CRITICAL)
+    @allure.feature('Login')
+    @allure.title("Successful login")
+    def test_3(self, driver):
+        login_obj = Login(driver)
+        home_page_obj = HomePage(driver)
+        driver.refresh()
+        login_obj.set_email_field(BaseClass.email)
+        login_obj.set_password_field(BaseClass.password)
+        login_obj.click_login_button()
+        home_page_obj.wait_page_to_load()
+        with check, allure.step("Logout button is visible"):
+            assert home_page_obj.is_logout_button_visible()
+
+    @severity(severity_level.CRITICAL)
+    @allure.feature('Login')
+    @allure.title("Successful logout")
+    def test_4(self, driver):
+        login_obj = Login(driver)
+        home_page_obj = HomePage(driver)
+        driver.refresh()
+        home_page_obj.wait_page_to_load()
+        home_page_obj.click_logout_button()
+        home_page_obj.wait_page_to_load()
+        with check, allure.step("Check for logout message"):
+            assert login_obj.is_credentials_error_message_visible()
+        with check, allure.step("Check the logout message text"):
+            assert login_obj.get_credentials_error_message_text() == "You have been logged out."
