@@ -257,7 +257,7 @@ jobs:
     steps:
 
       - name: Set browser variable
-        run: echo "BROWSERS=firefox" >> "$GITHUB_ENV"
+        run: echo "BROWSERS=safari" >> "$GITHUB_ENV"
 
       - name: Checkout test repository
         uses: actions/checkout@v4

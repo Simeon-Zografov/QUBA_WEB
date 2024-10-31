@@ -64,8 +64,12 @@ class BaseClass:
                 driver = webdriver.Chrome(service=serv, options=options)
             elif browser == "firefox":
                 options = FirefoxOptions()
-                options.headless = True
-                driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
+                options.add_argument("--headless")
+                geckodriver_driver_path = "/usr/bin/geckodriver"
+                serv = FirefoxService(geckodriver_driver_path)
+                driver = webdriver.Firefox(service=serv, options=options)
+                # options.headless = True
+                # driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
             else:
                 driver = webdriver.Safari()
         else:
