@@ -203,10 +203,9 @@ jobs:
 
       - name: Copy previous history data
         run: |
-          if [ -d allure-report/history ]; then
-            echo ls -a
+          if [ -d history ]; then
             mkdir -p allure-results/history
-            cp -r allure-report/history/* allure-results/history/
+            cp -r history/* allure-results/history/
           fi
 
       - name: Generate consolidated Allure report
