@@ -41,22 +41,21 @@ jobs:
     name: Run tests
     strategy:
       matrix:
+        os: [ ubuntu-latest, macos-latest ]
         include:
           - browser: chrome
             os: ubuntu-latest
+            run_if_selected: ${{ github.event.inputs.chrome == 'true' }}
           - browser: firefox
             os: ubuntu-latest
+            run_if_selected: ${{ github.event.inputs.firefox == 'true' }}
           - browser: edge
             os: ubuntu-latest
+            run_if_selected: ${{ github.event.inputs.edge == 'true' }}
           - browser: safari
             os: macos-latest
+            run_if_selected: ${{ github.event.inputs.safari == 'true' }}
 
-    if: |
-      github.event_name == 'schedule' ||
-      (matrix.browser == 'chrome' && github.event.inputs.chrome == 'true') ||
-      (matrix.browser == 'firefox' && github.event.inputs.firefox == 'true') ||
-      (matrix.browser == 'edge' && github.event.inputs.edge == 'true') ||
-      (matrix.browser == 'safari' && github.event.inputs.safari == 'true')
 
     runs-on: ${{ matrix.os }}
     steps:
