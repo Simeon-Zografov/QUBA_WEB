@@ -53,18 +53,18 @@ jobs:
 #          - browser: safari
 #            os: ubuntu-latest
         include:
-          - browser: chrome
+          - if: ${{ github.event.inputs.chrome == 'true' }}
+            browser: chrome
             os: ubuntu-latest
-            run_if_selected: ${{ github.event.inputs.chrome == 'true' }}
-          - browser: firefox
+          - if: ${{ github.event.inputs.firefox == 'true' }}
+            browser: firefox
             os: ubuntu-latest
-            run_if_selected: ${{ github.event.inputs.firefox == 'true' }}
-          - browser: edge
+          - if: ${{ github.event.inputs.edge == 'true' }}
+            browser: edge
             os: ubuntu-latest
-            run_if_selected: ${{ github.event.inputs.edge == 'true' }}
-          - browser: safari
+          - if: ${{ github.event.inputs.safari == 'true' }}
+            browser: safari
             os: macos-latest
-            run_if_selected: ${{ github.event.inputs.safari == 'true' }}
 
 
     runs-on: ${{ matrix.os }}
