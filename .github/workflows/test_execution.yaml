@@ -180,6 +180,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   aggregate:
+    name: Generate report
     needs: [chrome-test, edge-test]
     if: always()
     runs-on: ubuntu-latest
