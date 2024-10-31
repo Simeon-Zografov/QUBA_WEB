@@ -37,41 +37,14 @@ on:
           - 'Contact Page'
 
 jobs:
-  tests:
-    name: Run tests
-    strategy:
-      matrix:
-#        browser: [chrome, firefox, edge, safari]
-#        os: [ ubuntu-latest, macos-latest ]
-#        exclude:
-#          - browser: chrome
-#            os: macos-latest
-#          - browser: firefox
-#            os: macos-latest
-#          - browser: edge
-#            os: macos-latest
-#          - browser: safari
-#            os: ubuntu-latest
-        include:
-          - if: ${{ github.event.inputs.chrome == 'true' }}
-            browser: chrome
-            os: ubuntu-latest
-          - if: ${{ github.event.inputs.firefox == 'true' }}
-            browser: firefox
-            os: ubuntu-latest
-          - if: ${{ github.event.inputs.edge == 'true' }}
-            browser: edge
-            os: ubuntu-latest
-          - if: ${{ github.event.inputs.safari == 'true' }}
-            browser: safari
-            os: macos-latest
-
-
-    runs-on: ${{ matrix.os }}
+  chrome-test:
+    name: Run Chrome tests
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.chrome == 'true' }}
     steps:
       
       - name: Set browser variable
-        run: echo "BROWSERS=${{ matrix.browser }}" >> "$GITHUB_ENV"
+        run: echo "BROWSERS=chrome" >> "$GITHUB_ENV"
         
       - name: Checkout test repository
         uses: actions/checkout@v4
@@ -130,17 +103,92 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b gh-pages || git checkout gh-pages
-          git pull origin gh-pages  # Pull latest changes to avoid overwriting
-          mkdir -p results-${{ matrix.browser }}
-          cp -r allure-results/* results-${{ matrix.browser }}/
-          git add results-${{ matrix.browser }}
-          git commit -m "Add report for ${{ matrix.browser }}"
+          git pull origin gh-pages
+          mkdir -p results-chrome
+          cp -r allure-results/* results-chrome/
+          git add results-chrome
+          git commit -m "Add report for chrome"
+          git push origin gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  edge-test:
+    name: Run Edge tests
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.edge == 'true' }}
+    steps:
+
+      - name: Set browser variable
+        run: echo "BROWSERS=edge" >> "$GITHUB_ENV"
+
+      - name: Checkout test repository
+        uses: actions/checkout@v4
+        with:
+          repository: Simeon-Zografov/QUBA_WEB
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install allure
+        run: |
+          npm install -g allure-commandline
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+        working-directory: .
+
+      - name: Run Selenium tests
+        continue-on-error: true
+        env:
+          URL: ${{ vars.URL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          BROWSERS: ${{ env.BROWSERS }}
+          EMAIL: ${{ vars.EMAIL }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          APIURL: ${{ vars.APIURL }}
+          KCURL: ${{ vars.KCURL }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+
+        run: |
+          mkdir -p allure-results
+          if [ "${{ github.event.inputs.test_options }}" != 'All' ]; then
+            if [ "${{ github.event.inputs.test_options }}" == 'Home Page' ]; then
+              pytest Tests/test_HomePage.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'Login' ]; then
+              pytest Tests/test_Login.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'Sites Page' ]; then
+              pytest Tests/test_Sites.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'Contact Page' ]; then
+              pytest Tests/test_ContactPage.py
+            else
+              echo "Invalid option"
+            fi
+          else
+            pytest
+          fi
+        working-directory: .
+
+      - name: Commit and push individual report to gh-pages
+        if: always()
+        continue-on-error: true
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b gh-pages || git checkout gh-pages
+          git pull origin gh-pages
+          mkdir -p results-edge
+          cp -r allure-results/* results-edge/
+          git add results-edge
+          git commit -m "Add report for edge"
           git push origin gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   aggregate:
-    needs: tests
+    needs: [chrome-test, edge-test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout gh-pages branch
