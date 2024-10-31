@@ -1,0 +1,4 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","0","Check language switch","Tests","Thu Oct 31 14:02:42 UTC 2024","broken","Thu Oct 31 14:02:42 UTC 2024","TestHomePage","test_HomePage","",""
+"","0","User is navigated to the Home page","Tests","Thu Oct 31 14:02:38 UTC 2024","broken","Thu Oct 31 14:02:38 UTC 2024","TestHomePage","test_HomePage","",""
+"","0","Check main navigation","Tests","Thu Oct 31 14:02:42 UTC 2024","broken","Thu Oct 31 14:02:42 UTC 2024","TestHomePage","test_HomePage","",""
