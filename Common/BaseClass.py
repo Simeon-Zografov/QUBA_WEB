@@ -11,6 +11,7 @@ from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.edge.service import Service as EdgeService
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
@@ -47,7 +48,7 @@ class BaseClass:
                 options.add_argument("--disable-infobars")
                 serv = EdgeService(EdgeChromiumDriverManager().install())
                 driver = webdriver.Edge(service=serv, options=options)
-            else:
+            elif browser == "chrome":
                 options = ChromeOptions()
                 options.add_argument("--headless")
                 options.add_argument("--disable-gpu")
@@ -61,22 +62,30 @@ class BaseClass:
                 chrome_driver_path = "/usr/bin/chromedriver"
                 serv = ChromeService(chrome_driver_path)
                 driver = webdriver.Chrome(service=serv, options=options)
+            elif browser == "firefox":
+                options = FirefoxOptions()
+                options.headless = True
+                driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
+            else:
+                driver = webdriver.Safari()
         else:
-            if browser == "Edge":
+            if browser == "edge":
                 # edge_driver_path = os.path.join(project_folder, 'Resources', 'msedgedriver')
                 # serv = EdgeService(edge_driver_path)
                 # driver = webdriver.Edge(service=serv)
                 driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()))
-            elif browser == "Chrome":
+            elif browser == "chrome":
                 chrome_driver_path = os.path.join(project_folder, 'Resources', 'chromedriver')
                 serv = ChromeService(chrome_driver_path)
                 driver = webdriver.Chrome(service=serv)
                 # driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-            else:
+            elif browser == "firefox":
                 # firefox_driver_path = os.path.join(project_folder, 'Resources', 'geckodriver')
                 # serv = FirefoxService(firefox_driver_path)
                 # driver = webdriver.Firefox(service=serv)
                 driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
+            else:
+                driver = webdriver.Safari()
 
         driver.implicitly_wait(10)
         driver.maximize_window()
