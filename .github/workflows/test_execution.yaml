@@ -96,19 +96,19 @@ jobs:
           fi
         working-directory: .
 
-      - name: Commit and push individual report to gh-pages
+      - name: Commit and push individual report to gh_pages
         if: always()
         continue-on-error: true
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b gh-pages || git checkout gh-pages
-          git pull origin gh-pages
+          git checkout -b gh_pages || git checkout gh_pages
+          git pull origin gh_pages
           mkdir -p results-chrome
           cp -r allure-results/* results-chrome/
           git add results-chrome
           git commit -m "Add report for chrome"
-          git push origin gh-pages
+          git push origin gh_pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -171,19 +171,19 @@ jobs:
           fi
         working-directory: .
 
-      - name: Commit and push individual report to gh-pages
+      - name: Commit and push individual report to gh_pages
         if: always()
         continue-on-error: true
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b gh-pages || git checkout gh-pages
-          git pull origin gh-pages
+          git checkout -b gh_pages || git checkout gh_pages
+          git pull origin gh_pages
           mkdir -p results-edge
           cp -r allure-results/* results-edge/
           git add results-edge
           git commit -m "Add report for edge"
-          git push origin gh-pages
+          git push origin gh_pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -191,10 +191,10 @@ jobs:
     needs: [chrome-test, edge-test]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout gh-pages branch
+      - name: Checkout gh_pages branch
         uses: actions/checkout@v2
         with:
-          ref: gh-pages
+          ref: gh_pages
 
       - name: Merge individual reports
         run: |
@@ -219,20 +219,20 @@ jobs:
           rm -rf allure-results
           rm -rf results-*
 
-      - name: Commit and push consolidated report to gh-pages
+      - name: Commit and push consolidated report to gh_pages
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git add allure-report
           git commit -m "Update consolidated Allure report for GitHub Pages"
-          git push origin gh-pages
+          git push origin gh_pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish test report
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh_pages@v4
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
+          publish_branch: gh_pages
           publish_dir: allure-report
