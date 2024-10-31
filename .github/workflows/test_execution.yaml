@@ -323,7 +323,7 @@ jobs:
 
   aggregate:
     name: Generate report
-    needs: [chrome-test, edge-test]
+    needs: [chrome-test, edge-test, firefox-test, safari-test]
     if: always()
     runs-on: ubuntu-latest
     steps:
