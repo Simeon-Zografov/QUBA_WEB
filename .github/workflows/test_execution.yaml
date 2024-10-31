@@ -204,6 +204,7 @@ jobs:
       - name: Copy previous history data
         run: |
           if [ -d allure-report/history ]; then
+            echo ls -a
             mkdir -p allure-results/history
             cp -r allure-report/history/* allure-results/history/
           fi
