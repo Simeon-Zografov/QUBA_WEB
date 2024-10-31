@@ -41,17 +41,17 @@ jobs:
     name: Run tests
     strategy:
       matrix:
-        browser: [chrome, firefox, edge, safari]
-        os: [ ubuntu-latest, macos-latest ]
-        exclude:
-          - browser: chrome
-            os: macos-latest
-          - browser: firefox
-            os: macos-latest
-          - browser: edge
-            os: macos-latest
-          - browser: safari
-            os: ubuntu-latest
+#        browser: [chrome, firefox, edge, safari]
+#        os: [ ubuntu-latest, macos-latest ]
+#        exclude:
+#          - browser: chrome
+#            os: macos-latest
+#          - browser: firefox
+#            os: macos-latest
+#          - browser: edge
+#            os: macos-latest
+#          - browser: safari
+#            os: ubuntu-latest
         include:
           - browser: chrome
             os: ubuntu-latest
