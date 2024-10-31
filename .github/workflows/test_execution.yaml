@@ -189,6 +189,7 @@ jobs:
 
   aggregate:
     needs: [chrome-test, edge-test]
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Checkout gh_pages branch
@@ -230,7 +231,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish test report
-        uses: peaceiris/actions-gh_pages@v4
+        uses: peaceiris/actions-gh-pages@v4
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
