@@ -103,7 +103,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b gh_pages || git checkout gh_pages
-          git pull origin gh_pages --ff-only
+          git pull origin gh_pages --rebase
           mkdir -p results-chrome
           cp -r allure-results/* results-chrome/
           git add results-chrome
@@ -178,7 +178,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b gh_pages || git checkout gh_pages
-          git pull origin gh_pages --no-rebase
+          git pull origin gh_pages --rebase
           mkdir -p results-edge
           cp -r allure-results/* results-edge/
           git add results-edge
@@ -193,8 +193,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout gh_pages branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
+          repository: Simeon-Zografov/QUBA_WEB
           ref: gh_pages
 
       - name: Merge individual reports
