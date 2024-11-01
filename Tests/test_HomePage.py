@@ -1,3 +1,5 @@
+import time
+
 import allure
 import pytest
 from pytest_check import check
@@ -10,6 +12,11 @@ from Common.BaseClass import BaseClass
 
 @pytest.mark.parametrize("driver", BaseClass.browsers, indirect=True)
 class TestHomePage(BaseClass):
+    current_browser = None
+
+    @pytest.fixture(autouse=True)
+    def setup(self, request):
+        TestHomePage.current_browser = request.node.callspec.params["driver"]
 
     @severity(severity_level.CRITICAL)
     @allure.feature('Home page')
@@ -44,4 +51,6 @@ class TestHomePage(BaseClass):
         with check, allure.step("Successful language change"):
             home_page_obj.click_language_switch_button()
             home_page_obj.click_language_button()
+            if TestHomePage.current_browser == "safari":
+                time.sleep(0.5)
             assert home_page_obj.get_page_language() == "ar-SA"

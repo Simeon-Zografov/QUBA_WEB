@@ -14,6 +14,11 @@ from Common.BaseClass import BaseClass
 @pytest.mark.parametrize("driver", BaseClass.browsers, indirect=True)
 @pytest.mark.flaky(reruns=3, reruns_delay=0.5, rerun_except="assert")
 class TestSites(BaseClass):
+    current_browser = None
+
+    @pytest.fixture(autouse=True)
+    def setup(self, request):
+        TestSites.current_browser = request.node.callspec.params["driver"]
 
     @classmethod
     def setup_class(cls):
@@ -27,7 +32,7 @@ class TestSites(BaseClass):
         home_page_obj = HomePage(driver)
         sites_obj = Sites(driver)
         driver.get(BaseClass.url)
-        home_page_obj.wait_page_to_load()
+        home_page_obj.wait_page_to_load(TestSites.current_browser)
         home_page_obj.click_sites_button()
         with check, allure.step("Sites title is visible"):
             assert sites_obj.is_sites_page_title_visible()

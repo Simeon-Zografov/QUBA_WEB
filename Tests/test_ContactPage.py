@@ -26,7 +26,7 @@ class TestContactPage(BaseClass):
         contact_obj = ContactPage(driver)
         home_page_obj = HomePage(driver)
         driver.get(BaseClass.url)
-        home_page_obj.wait_page_to_load()
+        home_page_obj.wait_page_to_load(TestContactPage.current_browser)
         contact_obj.click_contact_button()
         with check, allure.step("Check the page title"):
             assert contact_obj.is_contact_page_title_visible()
@@ -43,7 +43,7 @@ class TestContactPage(BaseClass):
         contact_obj.set_email_field(random_email)
         contact_obj.set_message_field(random_message)
         contact_obj.click_send_message_button()
-        time.sleep(10)
+        time.sleep(15)
         with check, allure.step("Success message is visible"):
             assert contact_obj.is_success_message_visible()
         expected_email = f"Full name: {random_name}\r\nEmail address: {random_email}\r\nYour message: {random_message}\r\n"

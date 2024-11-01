@@ -87,7 +87,7 @@ class Sites:
         location = element.location
         x = location['x']
         y = location['y']
-        self.driver.execute_script(f"window.scrollTo({x}, {y - 100});")
+        self.driver.execute_script(f"window.scrollTo({x}, {y - 150});")
         time.sleep(1)
         element.click()
 
@@ -99,7 +99,7 @@ class Sites:
         location = element.location
         x = location['x']
         y = location['y']
-        self.driver.execute_script(f"window.scrollTo({x}, {y - 100});")
+        self.driver.execute_script(f"window.scrollTo({x}, {y - 150});")
         time.sleep(1)
 
     def scroll_to_tab_buttons(self):
@@ -107,7 +107,7 @@ class Sites:
         location = element.location
         x = location['x']
         y = location['y']
-        self.driver.execute_script(f"window.scrollTo({x}, {y - 100});")
+        self.driver.execute_script(f"window.scrollTo({x}, {y - 150});")
         time.sleep(1)
 
     def get_individual_site_title_text(self):
