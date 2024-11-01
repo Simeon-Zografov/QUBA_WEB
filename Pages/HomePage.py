@@ -1,5 +1,6 @@
 import time
 
+from selenium.common import NoSuchFrameException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -46,15 +47,24 @@ class HomePage:
 
     def wait_page_to_load(self, browser):
         if browser == "safari":
-            time.sleep(1)
+            time.sleep(2)
         wait = WebDriverWait(self.driver, 30)
         wait.until(EC.visibility_of_element_located((By.XPATH, "//h1")))
 
     def is_logout_button_visible(self, browser):
-        if browser == "safari":
-            time.sleep(1)
         wait = WebDriverWait(self.driver, 30)
         button = wait.until(EC.visibility_of_element_located(self.logout_button))
+        if browser == "safari":
+            retries = 3
+            for attempt in range(retries):
+                try:
+                    button.is_displayed()
+                    break
+                except NoSuchFrameException:
+                    if attempt < retries - 1:
+                        time.sleep(1)
+                    else:
+                        raise
         return button.is_displayed()
 
     def click_logout_button(self):
