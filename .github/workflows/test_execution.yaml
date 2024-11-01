@@ -106,8 +106,8 @@ jobs:
           git commit -m "Add report for chrome"
           n=0
           until [ $n -ge 5 ]; do
-            git pull --rebase origin gh-pages  # Rebase on top of the latest changes
-            git push origin gh-pages && break  # Push and break if successful
+            git pull origin gh_pages --rebase
+            git push origin gh_pages && break
             n=$((n+1))
             echo "Push failed, retrying in 3 seconds..."
             sleep 3
@@ -189,8 +189,8 @@ jobs:
           git commit -m "Add report for edge"
           n=0
           until [ $n -ge 5 ]; do
-            git pull --rebase origin gh-pages  # Rebase on top of the latest changes
-            git push origin gh-pages && break  # Push and break if successful
+            git pull origin gh_pages --rebase
+            git push origin gh_pages && break
             n=$((n+1))
             echo "Push failed, retrying in 3 seconds..."
             sleep 3
@@ -272,8 +272,8 @@ jobs:
           git commit -m "Add report for firefox"
           n=0
           until [ $n -ge 5 ]; do
-            git pull --rebase origin gh-pages  # Rebase on top of the latest changes
-            git push origin gh-pages && break  # Push and break if successful
+            git pull origin gh_pages --rebase
+            git push origin gh_pages && break
             n=$((n+1))
             echo "Push failed, retrying in 3 seconds..."
             sleep 3
@@ -355,8 +355,8 @@ jobs:
           git commit -m "Add report for safari"
           n=0
           until [ $n -ge 5 ]; do
-            git pull --rebase origin gh-pages  # Rebase on top of the latest changes
-            git push origin gh-pages && break  # Push and break if successful
+            git pull origin gh_pages --rebase
+            git push origin gh_pages && break
             n=$((n+1))
             echo "Push failed, retrying in 3 seconds..."
             sleep 3
