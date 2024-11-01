@@ -12,6 +12,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.safari.options import Options as SafariOptions
 from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.edge.service import Service as EdgeService
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
@@ -89,7 +90,12 @@ class BaseClass:
                 # driver = webdriver.Firefox(service=serv)
                 driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
             else:
-                driver = webdriver.Safari()
+                options = SafariOptions()
+                # options.use_technology_preview = True
+                options.page_load_strategy = 'eager'
+                # options.automatic_inspection = True
+                # options.automatic_profiling = True
+                driver = webdriver.Safari(options=options)
 
         driver.implicitly_wait(10)
         driver.maximize_window()

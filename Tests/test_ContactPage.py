@@ -13,6 +13,11 @@ from Common.BaseClass import BaseClass
 
 @pytest.mark.parametrize("driver", BaseClass.browsers, indirect=True)
 class TestContactPage(BaseClass):
+    current_browser = None
+
+    @pytest.fixture(autouse=True)
+    def setup(self, request):
+        TestContactPage.current_browser = request.node.callspec.params["driver"]
 
     @severity(severity_level.CRITICAL)
     @allure.feature('Contact page')
@@ -32,7 +37,7 @@ class TestContactPage(BaseClass):
     def test_2(self, driver):
         contact_obj = ContactPage(driver)
         random_name = contact_obj.generate_random_name()
-        random_email = contact_obj.generate_random_email()
+        random_email = TestContactPage.current_browser + "_" + contact_obj.generate_random_email()
         random_message = contact_obj.generate_random_message()
         contact_obj.set_name_field(random_name)
         contact_obj.set_email_field(random_email)
@@ -42,6 +47,7 @@ class TestContactPage(BaseClass):
         with check, allure.step("Success message is visible"):
             assert contact_obj.is_success_message_visible()
         expected_email = f"Full name: {random_name}\r\nEmail address: {random_email}\r\nYour message: {random_message}\r\n"
-        actual_email = Email.get_latest_email_content()
+        email_number = len(BaseClass.browsers)
+        actual_email = Email.get_latest_email_content(TestContactPage.current_browser, email_number)
         with check, allure.step("Email is correct"):
             assert actual_email == expected_email

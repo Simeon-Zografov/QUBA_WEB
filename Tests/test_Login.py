@@ -8,7 +8,7 @@ from Common.BaseClass import BaseClass
 
 
 @pytest.mark.parametrize("driver", BaseClass.browsers, indirect=True)
-@pytest.mark.flaky(reruns=5, reruns_delay=0.5, rerun_except="assert")
+@pytest.mark.flaky(reruns=3, reruns_delay=0.5, rerun_except="assert")
 class TestLogin(BaseClass):
 
     @severity(severity_level.CRITICAL)
@@ -33,11 +33,12 @@ class TestLogin(BaseClass):
         ("", BaseClass.password, "Please enter your email"),
         (BaseClass.email, "", "Please enter your password")
     ])
-    def test_2(self, driver, email, password, error):
+    def test_2(self, driver, email, password, error, request):
+        current_browser = request.node.callspec.params["driver"]
         login_obj = Login(driver)
         driver.refresh()
-        login_obj.set_email_field(email)
-        login_obj.set_password_field(password)
+        login_obj.set_email_field(email, current_browser)
+        login_obj.set_password_field(password, current_browser)
         with check, allure.step("Check for error"):
             if "Please enter" in error:
                 assert login_obj.is_filed_error_message_visible()

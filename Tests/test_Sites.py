@@ -68,9 +68,9 @@ class TestSites(BaseClass):
             title = site["title"]
             summary = site["summary"]
             with check, allure.step(f"{title} title is correct"):
-                assert title.strip() == sites_obj.get_site_card_title(site_type, num)
+                assert title.strip() == sites_obj.get_site_card_title(site_type, num).strip()
             with check, allure.step(f"{title} summary is correct"):
-                assert summary.strip() == sites_obj.get_site_card_summary(site_type, num)
+                assert summary.strip() == sites_obj.get_site_card_summary(site_type, num).strip()
             num = num + 1
             if (num - 1) % 9 == 0:
                 sites_obj.scroll_to_pagination()
@@ -109,11 +109,11 @@ class TestSites(BaseClass):
                         assert not getattr(sites_obj, visible_method_name)()
                 else:
                     with check, allure.step(f"Check site {attribute}"):
-                        actual_text = getattr(sites_obj, text_method_name)().strip()
+                        actual_text = getattr(sites_obj, text_method_name)().strip().replace("\n", "")
                         expected_text = re.sub('<.*?>', '',
                                                site_information[random_site_id][attribute]
                                                .strip().replace('&quot;', '"').replace("&#x27;", "'")
-                                               .split("</p><p>", 1)[0])
+                                               .split("</p><p>", 1)[0]).replace("\n", "")
                         assert expected_text == actual_text
         if site_information[random_site_id]["exhibit"] == {}:
             with check, allure.step("Exhibit section is missing"):
@@ -127,9 +127,9 @@ class TestSites(BaseClass):
                 title = exhibit["title"]
                 summary = exhibit["summary"]
                 with check, allure.step(f"{title} title is correct"):
-                    assert title.strip() == sites_obj.get_exhibit_card_title(num)
+                    assert title.strip() == sites_obj.get_exhibit_card_title(num).strip()
                 with check, allure.step(f"{title} summary is correct"):
-                    assert summary.strip() == sites_obj.get_exhibit_card_summary(num)
+                    assert summary.strip() == sites_obj.get_exhibit_card_summary(num).strip()
                 num = num + 1
         sites_obj.click_back_button()
         sites_obj.scroll_to_tab_buttons()

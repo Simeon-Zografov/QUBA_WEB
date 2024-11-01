@@ -1,3 +1,4 @@
+import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -22,16 +23,20 @@ class Login:
     def click_login_button(self):
         self.driver.find_element(*self.login_button).click()
 
-    def set_email_field(self, email):
+    def set_email_field(self, email, current_browser):
         self.driver.find_element(*self.email_field).click()
         self.driver.find_element(*self.email_field).clear()
+        if current_browser == "safari":
+            time.sleep(0.5)
         if email != "":
             self.driver.find_element(*self.email_field).send_keys(email)
         self.driver.find_element(*self.password_field).click()
 
-    def set_password_field(self, password):
+    def set_password_field(self, password, current_browser):
         self.driver.find_element(*self.password_field).click()
         self.driver.find_element(*self.password_field).clear()
+        if current_browser == "safari":
+            time.sleep(0.5)
         if password != "":
             self.driver.find_element(*self.password_field).send_keys(password)
         self.driver.find_element(*self.email_field).click()
