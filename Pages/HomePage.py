@@ -52,19 +52,10 @@ class HomePage:
         wait.until(EC.visibility_of_element_located((By.XPATH, "//h1")))
 
     def is_logout_button_visible(self, browser):
+        if browser == "safari":
+            time.sleep(5)
         wait = WebDriverWait(self.driver, 30)
         button = wait.until(EC.visibility_of_element_located(self.logout_button))
-        if browser == "safari":
-            retries = 3
-            for attempt in range(retries):
-                try:
-                    button.is_displayed()
-                    break
-                except NoSuchFrameException:
-                    if attempt < retries - 1:
-                        time.sleep(1)
-                    else:
-                        raise
         return button.is_displayed()
 
     def click_logout_button(self):
