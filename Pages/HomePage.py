@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -42,11 +44,15 @@ class HomePage:
     def click_login_button(self):
         self.driver.find_element(*self.login_button).click()
 
-    def wait_page_to_load(self):
+    def wait_page_to_load(self, browser):
+        if browser == "safari":
+            time.sleep(1)
         wait = WebDriverWait(self.driver, 30)
         wait.until(EC.visibility_of_element_located((By.XPATH, "//h1")))
 
-    def is_logout_button_visible(self):
+    def is_logout_button_visible(self, browser):
+        if browser == "safari":
+            time.sleep(1)
         wait = WebDriverWait(self.driver, 30)
         button = wait.until(EC.visibility_of_element_located(self.logout_button))
         return button.is_displayed()

@@ -23,7 +23,7 @@ class TestLogin(BaseClass):
         home_page_obj = HomePage(driver)
         login_obj = Login(driver)
         driver.get(BaseClass.url)
-        home_page_obj.wait_page_to_load()
+        home_page_obj.wait_page_to_load(TestLogin.current_browser)
         with check, allure.step("Check the page title"):
             home_page_obj.click_login_button()
             assert login_obj.is_login_page_title_visible()
@@ -64,12 +64,13 @@ class TestLogin(BaseClass):
         login_obj = Login(driver)
         home_page_obj = HomePage(driver)
         driver.refresh()
+        home_page_obj.wait_page_to_load(TestLogin.current_browser)
         login_obj.set_email_field(BaseClass.email, current_browser)
         login_obj.set_password_field(BaseClass.password, current_browser)
         login_obj.click_login_button()
-        home_page_obj.wait_page_to_load()
+        home_page_obj.wait_page_to_load(TestLogin.current_browser)
         with check, allure.step("Logout button is visible"):
-            assert home_page_obj.is_logout_button_visible()
+            assert home_page_obj.is_logout_button_visible(TestLogin.current_browser)
 
     @severity(severity_level.CRITICAL)
     @allure.feature('Login')
@@ -78,9 +79,9 @@ class TestLogin(BaseClass):
         login_obj = Login(driver)
         home_page_obj = HomePage(driver)
         driver.refresh()
-        home_page_obj.wait_page_to_load()
+        home_page_obj.wait_page_to_load(TestLogin.current_browser)
         home_page_obj.click_logout_button()
-        home_page_obj.wait_page_to_load()
+        home_page_obj.wait_page_to_load(TestLogin.current_browser)
         with check, allure.step("Check for logout message"):
             assert login_obj.is_credentials_error_message_visible()
         with check, allure.step("Check the logout message text"):
