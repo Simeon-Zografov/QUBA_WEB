@@ -104,7 +104,19 @@ jobs:
           cp -r allure-results/* results-chrome/
           git add results-chrome
           git commit -m "Add report for chrome"
-          git push origin gh_pages
+          n=0
+          until [ $n -ge 5 ]; do
+            git pull --rebase origin gh-pages  # Rebase on top of the latest changes
+            git push origin gh-pages && break  # Push and break if successful
+            n=$((n+1))
+            echo "Push failed, retrying in 3 seconds..."
+            sleep 3
+          done
+
+          if [ $n -ge 5 ]; then
+            echo "Failed to push after 5 attempts."
+            exit 1
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -175,7 +187,19 @@ jobs:
           cp -r allure-results/* results-edge/
           git add results-edge
           git commit -m "Add report for edge"
-          git push origin gh_pages
+          n=0
+          until [ $n -ge 5 ]; do
+            git pull --rebase origin gh-pages  # Rebase on top of the latest changes
+            git push origin gh-pages && break  # Push and break if successful
+            n=$((n+1))
+            echo "Push failed, retrying in 3 seconds..."
+            sleep 3
+          done
+
+          if [ $n -ge 5 ]; then
+            echo "Failed to push after 5 attempts."
+            exit 1
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -246,7 +270,19 @@ jobs:
           cp -r allure-results/* results-firefox/
           git add results-firefox
           git commit -m "Add report for firefox"
-          git push origin gh_pages
+          n=0
+          until [ $n -ge 5 ]; do
+            git pull --rebase origin gh-pages  # Rebase on top of the latest changes
+            git push origin gh-pages && break  # Push and break if successful
+            n=$((n+1))
+            echo "Push failed, retrying in 3 seconds..."
+            sleep 3
+          done
+
+          if [ $n -ge 5 ]; then
+            echo "Failed to push after 5 attempts."
+            exit 1
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -317,7 +353,19 @@ jobs:
           cp -r allure-results/* results-safari/
           git add results-safari
           git commit -m "Add report for safari"
-          git push origin gh_pages
+          n=0
+          until [ $n -ge 5 ]; do
+            git pull --rebase origin gh-pages  # Rebase on top of the latest changes
+            git push origin gh-pages && break  # Push and break if successful
+            n=$((n+1))
+            echo "Push failed, retrying in 3 seconds..."
+            sleep 3
+          done
+
+          if [ $n -ge 5 ]; then
+            echo "Failed to push after 5 attempts."
+            exit 1
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
