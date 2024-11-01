@@ -4,7 +4,7 @@ import imaplib
 from Common.BaseClass import BaseClass
 
 
-def get_last_email(email_address, password, from_email, browser, number):
+def get_last_email(email_address, password, from_email, browser):
     server = imaplib.IMAP4_SSL('smtp.gmail.com')
     server.login(email_address, password)
     server.select('[Gmail]/Spam')
@@ -12,10 +12,9 @@ def get_last_email(email_address, password, from_email, browser, number):
     email_id_list = email_ids[1][0].decode('utf-8').split()
     list_len = len(email_id_list)
     latest_email_ids = ""
-    for i in range(number):
+    for i in range(4):
         latest_email_ids = latest_email_ids + "," + str(email_id_list[list_len - (i + 1)])
     latest_email_ids = latest_email_ids.strip(",").split(",")
-    print(latest_email_ids)
 
     email_dict = {}
     for latest_email_id in latest_email_ids:
@@ -35,7 +34,6 @@ def get_last_email(email_address, password, from_email, browser, number):
                         if part.get_content_type() == "text/plain" and not part.get("Content-Disposition"):
                             email_dict["Content"] = part.get_payload(decode=True).decode(
                                 part.get_content_charset() or 'utf-8')
-                        print(email_dict["Content"])
                     if f"{browser}_" in email_dict["Content"]:
                         break
                 else:
@@ -48,8 +46,8 @@ def get_last_email(email_address, password, from_email, browser, number):
     return email_dict
 
 
-def get_latest_email_subject(browser, number):
-    email_body = get_last_email(BaseClass.email, BaseClass.email_password, 'ci@hedgehoglab.com', browser, number)
+def get_latest_email_subject(browser):
+    email_body = get_last_email(BaseClass.email, BaseClass.email_password, 'ci@hedgehoglab.com', browser)
     if email_body is not None:
         email_subject = email_body["Subject"]
         return email_subject
@@ -57,8 +55,8 @@ def get_latest_email_subject(browser, number):
         print("Email body is None")
 
 
-def get_latest_email_content(browser, number):
-    email_body = get_last_email(BaseClass.email, BaseClass.email_password, 'ci@hedgehoglab.com', browser, number)
+def get_latest_email_content(browser):
+    email_body = get_last_email(BaseClass.email, BaseClass.email_password, 'ci@hedgehoglab.com', browser)
     if email_body is not None:
         email_content = email_body["Content"]
         return email_content

@@ -47,7 +47,6 @@ class TestContactPage(BaseClass):
         with check, allure.step("Success message is visible"):
             assert contact_obj.is_success_message_visible()
         expected_email = f"Full name: {random_name}\r\nEmail address: {random_email}\r\nYour message: {random_message}\r\n"
-        email_number = len(BaseClass.browsers)
-        actual_email = Email.get_latest_email_content(TestContactPage.current_browser, email_number)
+        actual_email = Email.get_latest_email_content(TestContactPage.current_browser)
         with check, allure.step("Email is correct"):
             assert actual_email == expected_email

@@ -72,7 +72,9 @@ class BaseClass:
                 # options.headless = True
                 # driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
             else:
-                driver = webdriver.Safari()
+                options = SafariOptions()
+                options.page_load_strategy = 'eager'
+                driver = webdriver.Safari(options=options)
         else:
             if browser == "edge":
                 # edge_driver_path = os.path.join(project_folder, 'Resources', 'msedgedriver')
@@ -91,10 +93,7 @@ class BaseClass:
                 driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
             else:
                 options = SafariOptions()
-                # options.use_technology_preview = True
                 options.page_load_strategy = 'eager'
-                # options.automatic_inspection = True
-                # options.automatic_profiling = True
                 driver = webdriver.Safari(options=options)
 
         driver.implicitly_wait(10)

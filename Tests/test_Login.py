@@ -10,6 +10,11 @@ from Common.BaseClass import BaseClass
 @pytest.mark.parametrize("driver", BaseClass.browsers, indirect=True)
 @pytest.mark.flaky(reruns=3, reruns_delay=0.5, rerun_except="assert")
 class TestLogin(BaseClass):
+    current_browser = None
+
+    @pytest.fixture(autouse=True)
+    def setup(self, request):
+        TestLogin.current_browser = request.node.callspec.params["driver"]
 
     @severity(severity_level.CRITICAL)
     @allure.feature('Login')
@@ -33,8 +38,8 @@ class TestLogin(BaseClass):
         ("", BaseClass.password, "Please enter your email"),
         (BaseClass.email, "", "Please enter your password")
     ])
-    def test_2(self, driver, email, password, error, request):
-        current_browser = request.node.callspec.params["driver"]
+    def test_2(self, driver, email, password, error):
+        current_browser = TestLogin.current_browser
         login_obj = Login(driver)
         driver.refresh()
         login_obj.set_email_field(email, current_browser)
@@ -55,11 +60,12 @@ class TestLogin(BaseClass):
     @allure.feature('Login')
     @allure.title("Successful login")
     def test_3(self, driver):
+        current_browser = TestLogin.current_browser
         login_obj = Login(driver)
         home_page_obj = HomePage(driver)
         driver.refresh()
-        login_obj.set_email_field(BaseClass.email)
-        login_obj.set_password_field(BaseClass.password)
+        login_obj.set_email_field(BaseClass.email, current_browser)
+        login_obj.set_password_field(BaseClass.password, current_browser)
         login_obj.click_login_button()
         home_page_obj.wait_page_to_load()
         with check, allure.step("Logout button is visible"):
