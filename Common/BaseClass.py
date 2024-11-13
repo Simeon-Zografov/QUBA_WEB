@@ -2,6 +2,7 @@ import os
 import shutil
 import subprocess
 import time
+import socket
 
 import pytest
 from dotenv import load_dotenv
@@ -120,12 +121,23 @@ class BaseClass:
         script_path = os.path.join(project_folder, "Common", "ResponseInterception.py")
         print(script_path)
 
+        def test_port_open(used_port):
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.settimeout(1)
+                try:
+                    s.bind(("127.0.0.1", used_port))
+                    print(f"Port {used_port} is available.")
+                except Exception as e:
+                    print(f"Failed to bind to port {used_port}: {e}")
+
+        test_port_open(9090)
+
         if mitmdump_path is None:
             raise FileNotFoundError("mitmdump executable not found in PATH. Please ensure mitmproxy is installed.")
         if browser == "chrome":
             port = "8082"
         elif browser == "edge":
-            port = "8084"
+            port = "9090"
         else:
             port = "8081"
         # port = "8082"
@@ -156,7 +168,7 @@ class BaseClass:
                 options.add_argument("--disable-dev-shm-usage")
                 options.add_argument("--disable-extensions")
                 options.add_argument("--disable-infobars")
-                options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')
+                options.add_argument(f'--proxy-server=https://127.0.0.1:{port}')
                 options.add_argument('--ignore-certificate-errors')
                 serv = EdgeService(EdgeChromiumDriverManager().install())
                 proxy_driver = webdriver.Edge(service=serv, options=options)
