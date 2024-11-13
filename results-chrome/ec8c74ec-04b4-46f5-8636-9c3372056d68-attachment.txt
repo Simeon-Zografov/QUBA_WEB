@@ -1,0 +1,22 @@
+chrome
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+chrome
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+[06:50:34.000] Loading script /home/runner/work/QUBA_WEB/QUBA_WEB/Common/ResponseInterception.py
+[06:50:34.003] [Errno 98] HTTP(S) proxy failed to listen on *:8082 with [Errno 98] error while attempting to bind on address ('0.0.0.0', 8082): address already in use
+Try specifying a different port by using `--mode regular@8084`.
+chrome
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+[06:50:35.046] Loading script /home/runner/work/QUBA_WEB/QUBA_WEB/Common/ResponseInterception.py
+[06:50:35.049] [Errno 98] HTTP(S) proxy failed to listen on *:8082 with [Errno 98] error while attempting to bind on address ('::', 8082, 0, 0): address already in use
+Try specifying a different port by using `--mode regular@8084`.
+chrome
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
