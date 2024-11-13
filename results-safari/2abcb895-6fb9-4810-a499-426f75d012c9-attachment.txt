@@ -1,0 +1,5 @@
+/bin/sh: /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge: No such file or directory
+/bin/sh: /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge: No such file or directory
+/bin/sh: /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge: No such file or directory
+/bin/sh: /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge: No such file or directory
+/bin/sh: /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge: No such file or directory
