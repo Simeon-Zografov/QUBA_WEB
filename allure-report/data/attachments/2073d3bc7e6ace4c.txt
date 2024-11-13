@@ -1,4 +1,0 @@
-safari
-home_page_test_29
-/Users/runner/work/QUBA_WEB/QUBA_WEB/Common/ResponseInterception.py
-Proxy subprocess started
