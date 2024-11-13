@@ -1,0 +1,22 @@
+firefox
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+firefox
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+[06:51:11.163] Loading script /home/runner/work/QUBA_WEB/QUBA_WEB/Common/ResponseInterception.py
+[06:51:11.165] [Errno 98] HTTP(S) proxy failed to listen on *:8081 with [Errno 98] error while attempting to bind on address ('0.0.0.0', 8081): address already in use
+Try specifying a different port by using `--mode regular@8083`.
+firefox
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+[06:51:12.575] Loading script /home/runner/work/QUBA_WEB/QUBA_WEB/Common/ResponseInterception.py
+[06:51:12.578] [Errno 98] HTTP(S) proxy failed to listen on *:8081 with [Errno 98] error while attempting to bind on address ('0.0.0.0', 8081): address already in use
+Try specifying a different port by using `--mode regular@8083`.
+firefox
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
