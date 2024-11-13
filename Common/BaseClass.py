@@ -130,7 +130,7 @@ class BaseClass:
             port = "8081"
         # port = "8082"
         mitmdump_process = subprocess.Popen([mitmdump_path, "-s", script_path, "--listen-port", port,
-                                             "--set", f"test_name={test_name}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                             "--set", f"test_name={test_name}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(5)
         if mitmdump_process:
             print("Proxy subprocess started")
