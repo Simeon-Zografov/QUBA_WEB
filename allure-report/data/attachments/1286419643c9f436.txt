@@ -1,0 +1,12 @@
+firefox
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+Unsupported on the browser
+Proxy driver created
+firefox
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+Unsupported on the browser
+Proxy driver created
