@@ -1,0 +1,6 @@
+edge
+home_page_test_29
+/home/runner/work/QUBA_WEB/QUBA_WEB/Common/ResponseInterception.py
+Proxy subprocess started
+Edge Proxy driver created
+Proxy driver created
