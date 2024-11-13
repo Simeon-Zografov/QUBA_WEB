@@ -4,10 +4,9 @@ import random
 import re
 from pytest_check import check
 from allure import severity, severity_level
-
 from Common.APIRequests import APIRequests
-from Pages.HomePage import HomePage
 from Pages.SitesPage import Sites, get_site_number, split_historic_and_retail_sites
+from Pages.MainNavigation import MainNavigation
 from Common.BaseClass import BaseClass
 
 
@@ -29,11 +28,11 @@ class TestSites(BaseClass):
     @allure.feature('Sites')
     @allure.title("User is navigated to the Sites page")
     def test_1(self, driver):
-        home_page_obj = HomePage(driver)
         sites_obj = Sites(driver)
+        main_nav_obj = MainNavigation(driver)
         driver.get(BaseClass.url)
-        home_page_obj.wait_page_to_load(TestSites.current_browser)
-        home_page_obj.click_sites_button()
+        main_nav_obj.wait_page_to_load()
+        main_nav_obj.click_sites_button()
         with check, allure.step("Sites title is visible"):
             assert sites_obj.is_sites_page_title_visible()
 

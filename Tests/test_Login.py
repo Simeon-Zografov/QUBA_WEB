@@ -2,8 +2,8 @@ import allure
 import pytest
 from pytest_check import check
 from allure import severity, severity_level
-from Pages.HomePage import HomePage
 from Pages.LoginPage import Login
+from Pages.MainNavigation import MainNavigation
 from Common.BaseClass import BaseClass
 
 
@@ -20,12 +20,12 @@ class TestLogin(BaseClass):
     @allure.feature('Login')
     @allure.title("User is navigated to the Login page")
     def test_1(self, driver):
-        home_page_obj = HomePage(driver)
         login_obj = Login(driver)
+        main_nav_obj = MainNavigation(driver)
         driver.get(BaseClass.url)
-        home_page_obj.wait_page_to_load(TestLogin.current_browser)
+        main_nav_obj.wait_page_to_load(TestLogin.current_browser)
         with check, allure.step("Check the page title"):
-            home_page_obj.click_login_button()
+            main_nav_obj.click_login_button()
             assert login_obj.is_login_page_title_visible()
 
     @severity(severity_level.NORMAL)
@@ -62,26 +62,26 @@ class TestLogin(BaseClass):
     def test_3(self, driver):
         current_browser = TestLogin.current_browser
         login_obj = Login(driver)
-        home_page_obj = HomePage(driver)
+        main_nav_obj = MainNavigation(driver)
         driver.refresh()
-        home_page_obj.wait_page_to_load(TestLogin.current_browser)
+        main_nav_obj.wait_page_to_load(TestLogin.current_browser)
         login_obj.set_email_field(BaseClass.email, current_browser)
         login_obj.set_password_field(BaseClass.password, current_browser)
         login_obj.click_login_button()
-        home_page_obj.wait_page_to_load(TestLogin.current_browser)
+        main_nav_obj.wait_page_to_load(TestLogin.current_browser)
         with check, allure.step("Logout button is visible"):
-            assert home_page_obj.is_logout_button_visible(TestLogin.current_browser)
+            assert main_nav_obj.is_logout_button_visible(TestLogin.current_browser)
 
     @severity(severity_level.CRITICAL)
     @allure.feature('Login')
     @allure.title("Successful logout")
     def test_4(self, driver):
         login_obj = Login(driver)
-        home_page_obj = HomePage(driver)
+        main_nav_obj = MainNavigation(driver)
         driver.refresh()
-        home_page_obj.wait_page_to_load(TestLogin.current_browser)
-        home_page_obj.click_logout_button()
-        home_page_obj.wait_page_to_load(TestLogin.current_browser)
+        main_nav_obj.wait_page_to_load(TestLogin.current_browser)
+        main_nav_obj.click_logout_button()
+        main_nav_obj.wait_page_to_load(TestLogin.current_browser)
         with check, allure.step("Check for logout message"):
             assert login_obj.is_credentials_error_message_visible()
         with check, allure.step("Check the logout message text"):

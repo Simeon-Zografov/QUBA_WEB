@@ -1,3 +1,5 @@
+import re
+
 import requests
 
 from Common.BaseClass import BaseClass
@@ -43,7 +45,11 @@ class APIRequests:
                 site_title = site["attributes"]["title"]
                 site_summary = site["attributes"]["summary"]
                 site_type = site["attributes"]["type"]
-                sites[site_id] = {"title": site_title, "summary": site_summary, "type": site_type}
+                site_image = site["attributes"]["assets"][0]["url"]
+                filename = re.search(r'([^/]+?\.[a-zA-Z0-9]+)(?=\);|$)', site_image)
+                if filename:
+                    filename = filename.group(0)
+                sites[site_id] = {"title": site_title, "summary": site_summary, "type": site_type, "image": filename}
             return sites
         else:
             print("Request failed with status code:", response.status_code)
@@ -75,6 +81,38 @@ class APIRequests:
             site[site_id] = {"title": site_title, "summary": site_summary, "address": site_address,
                              "opening_hours": site_opening_hours, "description": site_description, "exhibit": exhibits}
             return site
+        else:
+            print("Request failed with status code:", response.status_code)
+            print("Response content:", response.text)
+            return None
+
+    def get_events_list(self):
+        url = f"{BaseClass.api_url}/event"
+        headers = {
+            "Authorization": f"Bearer {self.token}"
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            response_data = response.json()
+            events = {}
+            for event in response_data:
+                event_id = event["id"]
+                event_title = event["attributes"]["title"]
+                event_summary = event["attributes"]["summary"]
+                event_start = event["attributes"]["startAt"]
+                event_end = event["attributes"]["endAt"]
+                event_image = event["attributes"]["assets"][0]["url"]
+                filename = re.search(r'([^/]+?\.[a-zA-Z0-9]+)(?=\);|$)', event_image)
+                if filename:
+                    filename = filename.group(0)
+                events[event_id] = {
+                    "title": event_title,
+                    "summary": event_summary,
+                    "start": event_start,
+                    "end": event_end,
+                    "image": filename
+                }
+            return events
         else:
             print("Request failed with status code:", response.status_code)
             print("Response content:", response.text)

@@ -1,4 +1,8 @@
 import os
+import shutil
+import subprocess
+import time
+
 import pytest
 from dotenv import load_dotenv
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -29,6 +33,9 @@ class BaseClass:
     api_url = os.getenv("APIURL")
     kcurl = os.getenv("KCURL")
     client_secret = os.getenv("CLIENT_SECRET")
+    cms_url = os.getenv("CMS_URL")
+    cms_email = os.getenv("CMS_EMAIL")
+    cms_password = os.getenv("CMS_PASSWORD")
 
     @pytest.fixture(scope="class", autouse=True)
     def driver(self, request):
@@ -100,3 +107,69 @@ class BaseClass:
         driver.maximize_window()
         yield driver
         driver.quit()
+
+    @pytest.fixture(scope="function", autouse=False)
+    def proxy_driver(self, request):
+        browser = request.node.callspec.params["driver"]
+        test_name = request.param
+        print(browser)
+        print(test_name)
+        # browser = getattr(request, "param", None)
+        project_folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        mitmdump_path = shutil.which("mitmdump")
+        script_path = os.path.join(project_folder, "Common", "ResponseInterception.py")
+        print("Proxy fixture started")
+
+        if mitmdump_path is None:
+            raise FileNotFoundError("mitmdump executable not found in PATH. Please ensure mitmproxy is installed.")
+        if browser == "chrome":
+            port = "8082"
+        elif browser == "edge":
+            port = "8084"
+        else:
+            port = "8081"
+        # port = "8082"
+        mitmdump_process = subprocess.Popen([mitmdump_path, "-s", script_path, "--listen-port", port,
+                                             "--set", f"test_name={test_name}"])
+        print("Proxy subprocess started")
+        if browser == "chrome":
+            chrome_driver_path = os.path.join(project_folder, 'Resources', 'chromedriver')
+            options = webdriver.ChromeOptions()
+            options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')  # mitmproxy default proxy
+            options.add_argument('--ignore-certificate-errors')  # Bypass cert errors if needed for testing
+
+            serv = ChromeService(chrome_driver_path)
+            proxy_driver = webdriver.Chrome(service=serv, options=options)
+        else:
+            options = webdriver.EdgeOptions()
+            options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')  # mitmproxy default proxy
+            options.add_argument('--ignore-certificate-errors')  # Bypass cert errors if needed for testing
+
+            proxy_driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
+        # elif browser == "firefox":
+        #     options = FirefoxOptions()
+        #     # firefox_profile = webdriver.FirefoxProfile()
+        #     # Specify to use manual proxy configuration.
+        #     options.set_preference('network.proxy.type', 1)
+        #     # Set the host/port.
+        #     options.set_preference('network.proxy.http', 'http://127.0.0.1')
+        #     options.set_preference('network.proxy.https_port', port)
+        #     options.set_preference('network.proxy.ssl', 'http://127.0.0.1')
+        #     options.set_preference('network.proxy.ssl_port', port)
+        #     # options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')
+        #     # options.set_preference("security.enterprise_roots.enabled", True)
+        #     # options.set_preference("network.proxy.allow_hijacking_localhost", True)
+        #     # options.set_preference("devtools.console.stdout.content", True)
+        #
+        #     proxy_driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
+        # else:
+        #     options = SafariOptions()
+        #     options.page_load_strategy = 'eager'
+        #     proxy_driver = webdriver.Safari(options=options)
+        print("Proxy driver created")
+        proxy_driver.implicitly_wait(10)
+        proxy_driver.maximize_window()
+        yield proxy_driver
+        proxy_driver.quit()
+        mitmdump_process.terminate()
+        mitmdump_process.wait()

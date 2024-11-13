@@ -1,13 +1,11 @@
 import time
-
 import allure
 import pytest
 from pytest_check import check
 from allure import severity, severity_level
-
 from Common import Email
 from Pages.ContactPage import ContactPage
-from Pages.HomePage import HomePage
+from Pages.MainNavigation import MainNavigation
 from Common.BaseClass import BaseClass
 
 
@@ -22,11 +20,14 @@ class TestContactPage(BaseClass):
     @severity(severity_level.CRITICAL)
     @allure.feature('Contact page')
     @allure.title("User is navigated to the Contact page")
+    @allure.issue("QP-271", "QP-271")
+    @allure.issue("QP-356", "QP-356")
+    @allure.testcase("58594", "C58594")
     def test_1(self, driver):
         contact_obj = ContactPage(driver)
-        home_page_obj = HomePage(driver)
+        main_nav_obj = MainNavigation(driver)
         driver.get(BaseClass.url)
-        home_page_obj.wait_page_to_load(TestContactPage.current_browser)
+        main_nav_obj.wait_page_to_load(TestContactPage.current_browser)
         contact_obj.click_contact_button()
         with check, allure.step("Check the page title"):
             assert contact_obj.is_contact_page_title_visible()
