@@ -160,6 +160,7 @@ class BaseClass:
                 options.add_argument('--ignore-certificate-errors')
                 serv = EdgeService(EdgeChromiumDriverManager().install())
                 proxy_driver = webdriver.Edge(service=serv, options=options)
+                print("Edge Proxy driver created")
             else:
                 pytest.skip("Unsupported on the browser")
         else:
