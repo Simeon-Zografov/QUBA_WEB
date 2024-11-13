@@ -61,8 +61,12 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          pip install mitmproxy
         working-directory: .
+
+      - name: Set timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: "Europe/London"
 
       - name: Run Selenium tests
         continue-on-error: true
@@ -145,8 +149,12 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          pip install mitmproxy
         working-directory: .
+
+      - name: Set timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: "Europe/London"
 
       - name: Run Selenium tests
         continue-on-error: true
@@ -231,6 +239,11 @@ jobs:
           pip install -r requirements.txt
         working-directory: .
 
+      - name: Set timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: "Europe/London"
+
       - name: Run Selenium tests
         continue-on-error: true
         env:
@@ -313,6 +326,11 @@ jobs:
         run: |
           pip install -r requirements.txt
         working-directory: .
+
+      - name: Set timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneMacos: "Europe/London"
 
       - name: Run Selenium tests
         continue-on-error: true
