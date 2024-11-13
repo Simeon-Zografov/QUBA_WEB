@@ -1,0 +1,25 @@
+edge
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+[06:50:51.766] Loading script /home/runner/work/QUBA_WEB/QUBA_WEB/Common/ResponseInterception.py
+[06:50:51.769] [Errno 98] HTTP(S) proxy failed to listen on *:8084 with [Errno 98] error while attempting to bind on address ('0.0.0.0', 8084): address already in use
+Try specifying a different port by using `--mode regular@8086`.
+edge
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+[06:50:52.963] Loading script /home/runner/work/QUBA_WEB/QUBA_WEB/Common/ResponseInterception.py
+[06:50:52.966] [Errno 98] HTTP(S) proxy failed to listen on *:8084 with [Errno 98] error while attempting to bind on address ('0.0.0.0', 8084): address already in use
+Try specifying a different port by using `--mode regular@8086`.
+edge
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+[06:50:55.332] Loading script /home/runner/work/QUBA_WEB/QUBA_WEB/Common/ResponseInterception.py
+[06:50:55.335] [Errno 98] HTTP(S) proxy failed to listen on *:8084 with [Errno 98] error while attempting to bind on address ('0.0.0.0', 8084): address already in use
+Try specifying a different port by using `--mode regular@8086`.
+edge
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
