@@ -1,0 +1,25 @@
+safari
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+safari
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+[06:50:57.123] Loading script /Users/runner/work/QUBA_WEB/QUBA_WEB/Common/ResponseInterception.py
+[06:50:57.141] [Errno 48] HTTP(S) proxy failed to listen on *:8081 with [Errno 48] error while attempting to bind on address ('0.0.0.0', 8081): address already in use
+Try specifying a different port by using `--mode regular@8083`.
+safari
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+[06:51:05.441] Loading script /Users/runner/work/QUBA_WEB/QUBA_WEB/Common/ResponseInterception.py
+[06:51:05.449] [Errno 48] HTTP(S) proxy failed to listen on *:8081 with [Errno 48] error while attempting to bind on address ('::', 8081, 0, 0): address already in use
+Try specifying a different port by using `--mode regular@8083`.
+safari
+home_page_test_29
+Proxy fixture started
+Proxy subprocess started
+[06:51:12.393] Loading script /Users/runner/work/QUBA_WEB/QUBA_WEB/Common/ResponseInterception.py
+[06:51:12.396] [Errno 48] HTTP(S) proxy failed to listen on *:8081 with [Errno 48] error while attempting to bind on address ('0.0.0.0', 8081): address already in use
+Try specifying a different port by using `--mode regular@8083`.
