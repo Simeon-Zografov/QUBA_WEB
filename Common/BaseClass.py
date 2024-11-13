@@ -132,40 +132,73 @@ class BaseClass:
         mitmdump_process = subprocess.Popen([mitmdump_path, "-s", script_path, "--listen-port", port,
                                              "--set", f"test_name={test_name}"])
         print("Proxy subprocess started")
-        if browser == "chrome":
-            chrome_driver_path = os.path.join(project_folder, 'Resources', 'chromedriver')
-            options = webdriver.ChromeOptions()
-            options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')  # mitmproxy default proxy
-            options.add_argument('--ignore-certificate-errors')  # Bypass cert errors if needed for testing
-
-            serv = ChromeService(chrome_driver_path)
-            proxy_driver = webdriver.Chrome(service=serv, options=options)
+        if os.getenv('CI') == 'true':
+            if browser == "chrome":
+                options = ChromeOptions()
+                options.add_argument("--headless")
+                options.add_argument("--disable-gpu")
+                options.add_argument("--no-sandbox")
+                options.add_argument("--disable-dev-shm-usage")
+                options.add_argument("--disable-extensions")
+                options.add_argument("--disable-infobars")
+                options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')
+                options.add_argument('--ignore-certificate-errors')
+                chrome_driver_path = "/usr/bin/chromedriver"
+                serv = ChromeService(chrome_driver_path)
+                proxy_driver = webdriver.Chrome(service=serv, options=options)
+            elif browser == "edge":
+                options = EdgeOptions()
+                options.add_argument("--headless")
+                options.add_argument("--disable-gpu")
+                options.add_argument("--no-sandbox")
+                options.add_argument("--disable-dev-shm-usage")
+                options.add_argument("--disable-extensions")
+                options.add_argument("--disable-infobars")
+                options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')
+                options.add_argument('--ignore-certificate-errors')
+                serv = EdgeService(EdgeChromiumDriverManager().install())
+                proxy_driver = webdriver.Edge(service=serv, options=options)
+            else:
+                proxy_driver = None
+                print("Unsupported on the browser")
         else:
-            options = webdriver.EdgeOptions()
-            options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')  # mitmproxy default proxy
-            options.add_argument('--ignore-certificate-errors')  # Bypass cert errors if needed for testing
+            if browser == "chrome":
+                chrome_driver_path = os.path.join(project_folder, 'Resources', 'chromedriver')
+                options = webdriver.ChromeOptions()
+                options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')  # mitmproxy default proxy
+                options.add_argument('--ignore-certificate-errors')  # Bypass cert errors if needed for testing
 
-            proxy_driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
-        # elif browser == "firefox":
-        #     options = FirefoxOptions()
-        #     # firefox_profile = webdriver.FirefoxProfile()
-        #     # Specify to use manual proxy configuration.
-        #     options.set_preference('network.proxy.type', 1)
-        #     # Set the host/port.
-        #     options.set_preference('network.proxy.http', 'http://127.0.0.1')
-        #     options.set_preference('network.proxy.https_port', port)
-        #     options.set_preference('network.proxy.ssl', 'http://127.0.0.1')
-        #     options.set_preference('network.proxy.ssl_port', port)
-        #     # options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')
-        #     # options.set_preference("security.enterprise_roots.enabled", True)
-        #     # options.set_preference("network.proxy.allow_hijacking_localhost", True)
-        #     # options.set_preference("devtools.console.stdout.content", True)
-        #
-        #     proxy_driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
-        # else:
-        #     options = SafariOptions()
-        #     options.page_load_strategy = 'eager'
-        #     proxy_driver = webdriver.Safari(options=options)
+                serv = ChromeService(chrome_driver_path)
+                proxy_driver = webdriver.Chrome(service=serv, options=options)
+            elif browser == "edge":
+                options = webdriver.EdgeOptions()
+                options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')  # mitmproxy default proxy
+                options.add_argument('--ignore-certificate-errors')  # Bypass cert errors if needed for testing
+
+                proxy_driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
+            else:
+                proxy_driver = None
+                print("Unsupported on the browser")
+            # elif browser == "firefox":
+            #     options = FirefoxOptions()
+            #     # firefox_profile = webdriver.FirefoxProfile()
+            #     # Specify to use manual proxy configuration.
+            #     options.set_preference('network.proxy.type', 1)
+            #     # Set the host/port.
+            #     options.set_preference('network.proxy.http', 'http://127.0.0.1')
+            #     options.set_preference('network.proxy.https_port', port)
+            #     options.set_preference('network.proxy.ssl', 'http://127.0.0.1')
+            #     options.set_preference('network.proxy.ssl_port', port)
+            #     # options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')
+            #     # options.set_preference("security.enterprise_roots.enabled", True)
+            #     # options.set_preference("network.proxy.allow_hijacking_localhost", True)
+            #     # options.set_preference("devtools.console.stdout.content", True)
+            #
+            #     proxy_driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
+            # else:
+            #     options = SafariOptions()
+            #     options.page_load_strategy = 'eager'
+            #     proxy_driver = webdriver.Safari(options=options)
         print("Proxy driver created")
         proxy_driver.implicitly_wait(10)
         proxy_driver.maximize_window()

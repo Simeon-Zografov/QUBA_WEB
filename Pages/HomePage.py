@@ -290,6 +290,7 @@ class HomePage:
         start_dt = datetime.fromisoformat(start_iso.replace("Z", "+00:00"))
         end_dt = datetime.fromisoformat(end_iso.replace("Z", "+00:00"))
         if os.getenv('CI') == 'true':
+            print("CI execution")
             hosted_tz = pytz.timezone("Europe/London")
         else:
             hosted_tz = pytz.timezone("Europe/Sofia")
