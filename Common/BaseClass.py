@@ -118,7 +118,7 @@ class BaseClass:
         project_folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         mitmdump_path = shutil.which("mitmdump")
         script_path = os.path.join(project_folder, "Common", "ResponseInterception.py")
-        print("Proxy fixture started")
+        print(script_path)
 
         if mitmdump_path is None:
             raise FileNotFoundError("mitmdump executable not found in PATH. Please ensure mitmproxy is installed.")
@@ -130,8 +130,10 @@ class BaseClass:
             port = "8081"
         # port = "8082"
         mitmdump_process = subprocess.Popen([mitmdump_path, "-s", script_path, "--listen-port", port,
-                                             "--set", f"test_name={test_name}"])
-        print("Proxy subprocess started")
+                                             "--set", f"test_name={test_name}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        time.sleep(5)
+        if mitmdump_process:
+            print("Proxy subprocess started")
         if os.getenv('CI') == 'true':
             if browser == "chrome":
                 options = ChromeOptions()
@@ -159,8 +161,7 @@ class BaseClass:
                 serv = EdgeService(EdgeChromiumDriverManager().install())
                 proxy_driver = webdriver.Edge(service=serv, options=options)
             else:
-                proxy_driver = None
-                print("Unsupported on the browser")
+                pytest.skip("Unsupported on the browser")
         else:
             if browser == "chrome":
                 chrome_driver_path = os.path.join(project_folder, 'Resources', 'chromedriver')
@@ -177,8 +178,7 @@ class BaseClass:
 
                 proxy_driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
             else:
-                proxy_driver = None
-                print("Unsupported on the browser")
+                pytest.skip("Unsupported on the browser")
             # elif browser == "firefox":
             #     options = FirefoxOptions()
             #     # firefox_profile = webdriver.FirefoxProfile()

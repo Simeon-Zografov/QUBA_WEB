@@ -61,6 +61,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+          pip install mitmproxy
         working-directory: .
 
       - name: Run Selenium tests
@@ -144,6 +145,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+          pip install mitmproxy
         working-directory: .
 
       - name: Run Selenium tests
