@@ -3,10 +3,13 @@ import shutil
 import subprocess
 import time
 import socket
+from base64 import b64encode
 
 import pytest
 from dotenv import load_dotenv
+from selenium.webdriver import Proxy
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.proxy import ProxyType
 from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium import webdriver
@@ -98,7 +101,10 @@ class BaseClass:
                 # firefox_driver_path = os.path.join(project_folder, 'Resources', 'geckodriver')
                 # serv = FirefoxService(firefox_driver_path)
                 # driver = webdriver.Firefox(service=serv)
-                driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
+                # driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
+                geco_driver_path = os.path.join(project_folder, 'Resources', 'geckodriver')
+                serv = FirefoxService(geco_driver_path)
+                driver = webdriver.Firefox(service=serv)
             else:
                 options = SafariOptions()
                 options.page_load_strategy = 'eager'
@@ -113,24 +119,18 @@ class BaseClass:
     def proxy_driver(self, request):
         browser = request.node.callspec.params["driver"]
         test_name = request.param
-        print(browser)
-        print(test_name)
-        # browser = getattr(request, "param", None)
         project_folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         mitmdump_path = shutil.which("mitmdump")
         script_path = os.path.join(project_folder, "Common", "ResponseInterception.py")
-        print(script_path)
 
-        def test_port_open(used_port):
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.settimeout(1)
-                try:
-                    s.bind(("127.0.0.1", used_port))
-                    print(f"Port {used_port} is available.")
-                except Exception as e:
-                    print(f"Failed to bind to port {used_port}: {e}")
-
-        test_port_open(9090)
+        # def test_port_open(used_port):
+        #     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        #         s.settimeout(1)
+        #         try:
+        #             s.bind(("127.0.0.1", used_port))
+        #             print(f"Port {used_port} is available.")
+        #         except Exception as e:
+        #             print(f"Failed to bind to port {used_port}: {e}")
 
         if mitmdump_path is None:
             raise FileNotFoundError("mitmdump executable not found in PATH. Please ensure mitmproxy is installed.")
@@ -138,9 +138,14 @@ class BaseClass:
             port = "8082"
         elif browser == "edge":
             port = "9090"
+        elif browser == "firefox":
+            port = "9092"
         else:
             port = "8081"
         # port = "8082"
+        #
+        # test_port_open(int(port))
+
         mitmdump_process = subprocess.Popen([mitmdump_path, "-s", script_path, "--listen-port", port,
                                              "--set", f"test_name={test_name}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(5)
@@ -173,6 +178,17 @@ class BaseClass:
                 serv = EdgeService(EdgeChromiumDriverManager().install())
                 proxy_driver = webdriver.Edge(service=serv, options=options)
                 print("Edge Proxy driver created")
+            elif browser == "firefox":
+                options = FirefoxOptions()
+                options.add_argument("--headless")
+                geckodriver_driver_path = "/usr/bin/geckodriver"
+                serv = FirefoxService(geckodriver_driver_path)
+                proxy = f'127.0.0.1:{port}'
+                webdriver.DesiredCapabilities.FIREFOX['proxy'] = {
+                    "httpProxy": proxy,
+                    "sslProxy": proxy,
+                    "proxyType": "manual"}
+                proxy_driver = webdriver.Firefox(service=serv, options=options)
             else:
                 pytest.skip("Unsupported on the browser")
         else:
@@ -190,29 +206,18 @@ class BaseClass:
                 options.add_argument('--ignore-certificate-errors')  # Bypass cert errors if needed for testing
 
                 proxy_driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
+            elif browser == "firefox":
+                proxy = f'127.0.0.1:{port}'
+                webdriver.DesiredCapabilities.FIREFOX['proxy'] = {
+                    "httpProxy": proxy,
+                    "sslProxy": proxy,
+                    "proxyType": "manual"}
+
+                geco_driver_path = os.path.join(project_folder, 'Resources', 'geckodriver')
+                serv = FirefoxService(geco_driver_path)
+                proxy_driver = webdriver.Firefox(service=serv)
             else:
                 pytest.skip("Unsupported on the browser")
-            # elif browser == "firefox":
-            #     options = FirefoxOptions()
-            #     # firefox_profile = webdriver.FirefoxProfile()
-            #     # Specify to use manual proxy configuration.
-            #     options.set_preference('network.proxy.type', 1)
-            #     # Set the host/port.
-            #     options.set_preference('network.proxy.http', 'http://127.0.0.1')
-            #     options.set_preference('network.proxy.https_port', port)
-            #     options.set_preference('network.proxy.ssl', 'http://127.0.0.1')
-            #     options.set_preference('network.proxy.ssl_port', port)
-            #     # options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')
-            #     # options.set_preference("security.enterprise_roots.enabled", True)
-            #     # options.set_preference("network.proxy.allow_hijacking_localhost", True)
-            #     # options.set_preference("devtools.console.stdout.content", True)
-            #
-            #     proxy_driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
-            # else:
-            #     options = SafariOptions()
-            #     options.page_load_strategy = 'eager'
-            #     proxy_driver = webdriver.Safari(options=options)
-        print("Proxy driver created")
         proxy_driver.implicitly_wait(10)
         proxy_driver.maximize_window()
         yield proxy_driver

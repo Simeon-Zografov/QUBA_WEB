@@ -578,8 +578,8 @@ class TestHomePage(BaseClass):
     # @pytest.mark.dependency(depends=["test_22"])
     @pytest.mark.parametrize("proxy_driver", ["home_page_test_29"], indirect=True)
     def test_29(self, proxy_driver):
-        if TestHomePage.current_browser == "firefox" or TestHomePage.current_browser == "safari":
-            pytest.skip(f"Mitmproxy is not supported on {TestHomePage.current_browser}")
+        # if TestHomePage.current_browser == "safari":
+        #     pytest.skip(f"Mitmproxy is not supported on {TestHomePage.current_browser}")
         # request.param = TestHomePage.current_browser
         # proxy_driver = proxy_driver(TestHomePage.current_browser, "home_page_test_29")
         # browser = TestHomePage.current_browser
