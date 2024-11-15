@@ -1,3 +1,4 @@
+import re
 import time
 
 from selenium.webdriver.common.by import By
@@ -32,6 +33,26 @@ class Admin:
         self.event_carousel_description = (By.XPATH, "//label[contains(., 'eventCarousel')]/../../..//textarea")
         self.event_carousel_link_text = (By.ID, "eventCarousel.sectionTitle.linkText")
         self.event_carousel_link_url = (By.ID, "eventCarousel.sectionTitle.linkUrl")
+        self.about_page_button = (By.XPATH, "//span[.='About page']/../../..")
+        self.about_heading_title = (By.ID, "heading.title")
+        self.about_heading_description = (By.XPATH, "//label[contains(., 'heading')]/../../..//textarea")
+        self.about_themes_title = (By.ID, "themes.sectionTitle.title")
+        self.about_themes_description = (By.XPATH, "//label[contains(., 'themes')]/../../..//textarea")
+        self.about_themes_buttons = (By.XPATH, "//button[contains(@aria-controls, 'accordion-content-themes.themes')]")
+        self.about_theme_title = (By.XPATH, "//input[contains(@id, 'themes.themes') and @aria-required='true']")
+        self.about_theme_description = (By.XPATH, "//label[contains(., 'themes')]/../../..//div["
+                                                  "@role='textbox']//p//span[@data-slate-string='true']")
+        self.about_image_gallery_title = (By.ID, "imageGallery.sectionTitle.title")
+        self.about_image_gallery_description = (By.ID, "imageGallery.sectionTitle.description")
+        self.about_image_gallery_image = (By.XPATH, "//label[contains(., 'imageGallery')]/../../..//span[@class='sc-dkPtRN "
+                                              "cSldSA']")
+        self.about_next_image_button = (By.XPATH, "//button[@aria-label='Next slide']")
+        self.about_faq_title = (By.ID, "faq.sectionTitle.title")
+        self.about_faq_description = (By.XPATH, "//label[contains(., 'faq')]/../../..//textarea")
+        self.about_faq_buttons = (By.XPATH, "//button[contains(@aria-controls, 'accordion-content-faq')]")
+        self.about_single_faq_title = (By.XPATH, "//input[contains(@id, 'faq.FAQ')]")
+        self.about_single_faq_description = (By.XPATH, "//label[contains(., 'FAQ')]/../../..//div["
+                                                       "@role='textbox']//p//span[@data-slate-string='true']")
 
     def set_email(self):
         self.driver.find_element(*self.email_field).clear()
@@ -160,3 +181,101 @@ class Admin:
         }
         return content
 
+    def click_about_page_button(self):
+        self.driver.find_element(*self.about_page_button).click()
+
+    def get_about_heading_title_value(self):
+        return self.driver.find_element(*self.about_heading_title).get_attribute('value')
+
+    def get_about_heading_description_text(self):
+        description_text = ""
+        elements = self.driver.find_elements(*self.about_heading_description)
+        for element in elements:
+            description_text = description_text + element.text.strip()
+        return description_text
+
+    def get_about_themes_title_value(self):
+        return self.driver.find_element(*self.about_themes_title).get_attribute('value')
+
+    def get_about_themes_description_text(self):
+        description_text = ""
+        elements = self.driver.find_elements(*self.about_themes_description)
+        for element in elements:
+            description_text = description_text + element.text.strip()
+        return description_text
+
+    def get_about_themes_elements(self):
+        content = {}
+        description_text = ""
+        elements = self.driver.find_elements(*self.about_themes_buttons)
+        for element in elements:
+            element.click()
+            title = self.driver.find_element(*self.about_theme_title).get_attribute('value')
+            paragraphs = self.driver.find_elements(*self.about_theme_description)
+            for paragraph in paragraphs:
+                description_text = description_text + paragraph.text.strip()
+            description_text = str(re.sub(' +', ' ', description_text))
+            content[title] = description_text
+            description_text = ""
+        return content
+
+    def get_image_gallery_title_value(self):
+        return self.driver.find_element(*self.about_image_gallery_title).get_attribute('value')
+
+    def get_image_gallery_description_text(self):
+        return self.driver.find_element(*self.about_image_gallery_description).text
+
+    def click_next_slide_button(self):
+        self.driver.find_element(*self.about_next_image_button).click()
+
+    def get_image_gallery_image(self):
+        return self.driver.find_element(*self.about_image_gallery_image).text
+
+    def get_gallery_images(self):
+        first_image = self.get_image_gallery_image()
+        images = []
+        while True:
+            images.append(self.get_image_gallery_image())
+            self.click_next_slide_button()
+            if first_image == self.get_image_gallery_image():
+                break
+        return images
+
+    def get_faq_title_value(self):
+        return self.driver.find_element(*self.about_faq_title).get_attribute('value')
+
+    def get_faq_description_text(self):
+        return self.driver.find_element(*self.about_faq_description).text
+
+    def get_faq_elements(self):
+        content = {}
+        description_text = ""
+        elements = self.driver.find_elements(*self.about_faq_buttons)
+        for element in elements:
+            element.click()
+            title = self.driver.find_element(*self.about_single_faq_title).get_attribute('value')
+            paragraphs = self.driver.find_elements(*self.about_single_faq_description)
+            for paragraph in paragraphs:
+                description_text = description_text + paragraph.text.strip()
+            description_text = str(re.sub(' +', ' ', description_text))
+            content[title] = description_text
+            description_text = ""
+        return content
+
+    def get_about_page_content(self):
+        self.click_content_manager_button()
+        self.click_about_page_button()
+        content = {
+            "heading_title": self.get_about_heading_title_value(),
+            "heading_description": self.get_about_heading_description_text(),
+            "themes_title": self.get_about_themes_title_value(),
+            "themes_description": self.get_about_themes_description_text(),
+            "theme_elements": self.get_about_themes_elements(),
+            "gallery_title": self.get_image_gallery_title_value(),
+            "gallery_description": self.get_image_gallery_description_text(),
+            "gallery_images": self.get_gallery_images(),
+            "faq_title": self.get_faq_title_value(),
+            "faq_description": self.get_faq_description_text(),
+            "faq_elements": self.get_faq_elements()
+        }
+        return content

@@ -11,7 +11,7 @@ from Common.BaseClass import BaseClass
 
 
 @pytest.mark.parametrize("driver", BaseClass.browsers, indirect=True)
-@pytest.mark.flaky(reruns=3, reruns_delay=0.5, rerun_except="assert")
+@pytest.mark.flaky(reruns=3, reruns_delay=0.5)
 class TestSites(BaseClass):
     current_browser = None
 

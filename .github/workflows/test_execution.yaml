@@ -34,6 +34,7 @@ on:
         options:
           - 'All'
           - 'Home Page'
+          - 'About Page'
           - 'Login'
           - 'Sites Page'
           - 'Contact Page'
@@ -87,6 +88,8 @@ jobs:
           else
             if [ "${{ github.event.inputs.test_options }}" == 'Home Page' ]; then
               pytest Tests/test_HomePage.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'About Page' ]; then
+              pytest Tests/test_AboutPage.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Login' ]; then
               pytest Tests/test_Login.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Sites Page' ]; then
@@ -175,6 +178,8 @@ jobs:
           else
             if [ "${{ github.event.inputs.test_options }}" == 'Home Page' ]; then
               pytest Tests/test_HomePage.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'About Page' ]; then
+              pytest Tests/test_AboutPage.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Login' ]; then
               pytest Tests/test_Login.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Sites Page' ]; then
@@ -263,6 +268,8 @@ jobs:
           else
             if [ "${{ github.event.inputs.test_options }}" == 'Home Page' ]; then
               pytest Tests/test_HomePage.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'About Page' ]; then
+              pytest Tests/test_AboutPage.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Login' ]; then
               pytest Tests/test_Login.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Sites Page' ]; then
@@ -351,6 +358,8 @@ jobs:
           else
             if [ "${{ github.event.inputs.test_options }}" == 'Home Page' ]; then
               pytest Tests/test_HomePage.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'About Page' ]; then
+              pytest Tests/test_AboutPage.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Login' ]; then
               pytest Tests/test_Login.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Sites Page' ]; then

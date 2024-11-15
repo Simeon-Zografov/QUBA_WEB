@@ -21,6 +21,14 @@ def response(flow: http.HTTPFlow) -> None:
         if test_name == "home_page_test_29":
             if 'data' in json_data and 'events' in json_data['data'] and 'data' in json_data['data']['events']:
                 json_data['data']['events']['data'] = []  # Set the events data to an empty list
+        if test_name == "about_page_test_9":
+            if ('data' in json_data and 'aboutPage' in json_data['data'] and 'data' in json_data['data']['aboutPage']
+                    and 'attributes' in json_data['data']['aboutPage']['data']
+                    and 'imageGallery' in json_data['data']['aboutPage']['data']['attributes']
+                    and 'images' in json_data['data']['aboutPage']['data']['attributes']['imageGallery']):
+                first_image = json_data['data']['aboutPage']['data']['attributes']['imageGallery']['images']['data'][0]
+                print("First image: ", first_image)
+                json_data['data']['aboutPage']['data']['attributes']['imageGallery']['images']['data'] = [first_image]
 
         # Encode the modified JSON back to the response
         modified_body = json.dumps(json_data)

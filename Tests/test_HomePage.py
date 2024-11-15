@@ -530,109 +530,20 @@ class TestHomePage(BaseClass):
         main_nav_obj.click_home_button()
         main_nav_obj.wait_page_to_load()
 
-    # @severity(severity_level.NORMAL)
-    # @allure.feature('Home page')
-    # @allure.title("Event carousel cards without events")
-    # @allure.issue("QP-269", "Story QP-269")
-    # @allure.issue("QP-356", "Epic QP-356")
-    # @allure.testcase("58609", "C58609")
-    # @pytest.mark.dependency(depends=["test_22"])
-    # def test_29(self):
-    #     project_folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    #     chrome_driver_path = os.path.join(project_folder, 'Resources', 'chromedriver')
-    #     serv = ChromeService(chrome_driver_path)
-    #     options = SeleniumWireOptions(
-    #         disable_encoding=True
-    #     )
-    #
-    #     wire_driver = webdriver.Chrome(service=serv, seleniumwire_options=options)
-    #
-    #     def response_interceptor(request, response):
-    #         if 'https://cms-qaclm.raseel.city/graphql' in request.url:
-    #             body = response.body.decode('utf-8')
-    #             json_data = json.loads(body)
-    #             print(json_data)
-    #
-    #             if 'data' in json_data and 'events' in json_data['data'] and 'data' in json_data['data']['events']:
-    #                 json_data['data']['events']['data'] = []
-    #
-    #             modified_body = json.dumps(json_data)
-    #             print(modified_body)
-    #             response.body = modified_body.encode('utf-8')
-    #
-    #     wire_driver.response_interceptor = response_interceptor
-    #     wire_driver.get(BaseClass.url)
-    #     main_nav_obj = MainNavigation(wire_driver)
-    #     home_page_obj = HomePage(wire_driver)
-    #     main_nav_obj.wait_page_to_load()
-    #     with check, allure.step("Events carousel is empty"):
-    #         assert home_page_obj.get_event_carousel_cards_number() == 0
-    #     wire_driver.quit()
-
     @severity(severity_level.NORMAL)
     @allure.feature('Home page')
     @allure.title("Event carousel cards without events")
     @allure.issue("QP-269", "Story QP-269")
     @allure.issue("QP-356", "Epic QP-356")
     @allure.testcase("58610", "C58610")
-    # @pytest.mark.dependency(depends=["test_22"])
     @pytest.mark.parametrize("proxy_driver", ["home_page_test_29"], indirect=True)
     def test_29(self, proxy_driver):
-        # if TestHomePage.current_browser == "safari":
-        #     pytest.skip(f"Mitmproxy is not supported on {TestHomePage.current_browser}")
-        # request.param = TestHomePage.current_browser
-        # proxy_driver = proxy_driver(TestHomePage.current_browser, "home_page_test_29")
-        # browser = TestHomePage.current_browser
-        # proxy_driver = BaseClass.proxy_driver(browser)
         proxy_driver.get(BaseClass.url)
-
-        # Replace this with your test's page load and interaction logic
         main_nav_obj = MainNavigation(proxy_driver)
         home_page_obj = HomePage(proxy_driver)
         main_nav_obj.wait_page_to_load()
-
-        # Example assertion to check if the events carousel is empty
         with check, allure.step("C58610: Events carousel is empty"):
             assert home_page_obj.get_event_carousel_cards_number() == 0
-        # project_folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        # browser = TestHomePage.current_browser
-        # chrome_driver_path = os.path.join(project_folder, 'Resources', 'chromedriver')
-        # mitmdump_path = shutil.which("mitmdump")
-        # script_path = os.path.join(project_folder, "Common", "ResponseInterception.py")
-
-        # if mitmdump_path is None:
-        #     raise FileNotFoundError("mitmdump executable not found in PATH. Please ensure mitmproxy is installed.")
-
-        # Start mitmdump with the response modification script
-        # mitmdump_process = subprocess.Popen([mitmdump_path, "-s", script_path, "--listen-port", port,
-        #                                      "--set", "test_name=home_page_test_29"])
-        # try:
-            # # Configure Chrome options to route through mitmproxy's default proxy
-            # options = webdriver.ChromeOptions()
-            # options.add_argument('--proxy-server=http://127.0.0.1:8082')  # mitmproxy default proxy
-            # options.add_argument('--ignore-certificate-errors')  # Bypass cert errors if needed for testing
-            #
-            # # Initialize the WebDriver
-            # serv = ChromeService(chrome_driver_path)
-            # proxy_driver = webdriver.Chrome(service=serv, options=options)
-            # browser = TestHomePage.current_browser
-            # proxy_driver = BaseClass.proxy_driver(browser)
-            # proxy_driver.get(BaseClass.url)
-            #
-            # # Replace this with your test's page load and interaction logic
-            # main_nav_obj = MainNavigation(proxy_driver)
-            # home_page_obj = HomePage(proxy_driver)
-            # main_nav_obj.wait_page_to_load()
-            #
-            # # Example assertion to check if the events carousel is empty
-            # with check, allure.step("C58610: Events carousel is empty"):
-            #     assert home_page_obj.get_event_carousel_cards_number() == 0
-        #
-        # finally:
-        #     # Clean up by closing the WebDriver and stopping mitmdump
-        #     proxy_driver.quit()
-        #     mitmdump_process.terminate()
-        #     mitmdump_process.wait()
 
     @severity(severity_level.CRITICAL)
     @allure.feature('Home page')
