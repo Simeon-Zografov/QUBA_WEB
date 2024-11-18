@@ -79,10 +79,13 @@ class BaseClass:
                 serv = ChromeService(chrome_driver_path)
                 driver = webdriver.Chrome(service=serv)
             elif browser == "firefox":
+                options = FirefoxOptions()
+                options.set_preference("browser.cache.disk.enable", False)
+                options.set_preference("network.proxy.type", 0)
                 geco_driver_path = os.path.join(project_folder, 'Resources', 'geckodriver')
                 serv = FirefoxService(geco_driver_path)
-                webdriver.DesiredCapabilities.FIREFOX['proxy'] = {"proxyType": "direct"}
-                driver = webdriver.Firefox(service=serv)
+                # webdriver.DesiredCapabilities.FIREFOX['proxy'] = {"proxyType": "direct"}
+                driver = webdriver.Firefox(service=serv, options=options)
             else:
                 options = SafariOptions()
                 options.page_load_strategy = 'eager'
@@ -146,13 +149,22 @@ class BaseClass:
             elif browser == "firefox":
                 options = FirefoxOptions()
                 options.add_argument("--headless")
+                options.set_preference("network.proxy.type", 1)  # 1 = Manual proxy configuration
+                options.set_preference("network.proxy.http", "127.0.0.1")
+                options.set_preference("network.proxy.http_port", int(port))
+                options.set_preference("network.proxy.ssl", "127.0.0.1")
+                options.set_preference("network.proxy.ssl_port", int(port))
+                options.set_preference("network.proxy.share_proxy_settings", True)
+                options.set_preference("network.proxy.no_proxies_on", "")  # Disable bypassing proxy
+                options.set_preference("network.proxy.allow_hijacking_localhost", True)  # Allow localhost interception
+                options.set_preference("devtools.console.stdout.content", True)
                 geckodriver_driver_path = "/usr/bin/geckodriver"
                 serv = FirefoxService(geckodriver_driver_path)
-                proxy = f'127.0.0.1:{port}'
-                webdriver.DesiredCapabilities.FIREFOX['proxy'] = {
-                    "httpProxy": proxy,
-                    "sslProxy": proxy,
-                    "proxyType": "manual"}
+                # proxy = f'127.0.0.1:{port}'
+                # webdriver.DesiredCapabilities.FIREFOX['proxy'] = {
+                #     "httpProxy": proxy,
+                #     "sslProxy": proxy,
+                #     "proxyType": "manual"}
                 proxy_driver = webdriver.Firefox(service=serv, options=options)
             else:
                 pytest.skip("Mitmproxy unsupported on the browser")
@@ -172,15 +184,24 @@ class BaseClass:
 
                 proxy_driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
             elif browser == "firefox":
-                proxy = f'127.0.0.1:{port}'
-                webdriver.DesiredCapabilities.FIREFOX['proxy'] = {
-                    "httpProxy": proxy,
-                    "sslProxy": proxy,
-                    "proxyType": "manual"}
-
+                options = FirefoxOptions()
+                # proxy = f'127.0.0.1:{port}'
+                # webdriver.DesiredCapabilities.FIREFOX['proxy'] = {
+                #     "httpProxy": proxy,
+                #     "sslProxy": proxy,
+                #     "proxyType": "manual"}
+                options.set_preference("network.proxy.type", 1)  # 1 = Manual proxy configuration
+                options.set_preference("network.proxy.http", "127.0.0.1")
+                options.set_preference("network.proxy.http_port", int(port))
+                options.set_preference("network.proxy.ssl", "127.0.0.1")
+                options.set_preference("network.proxy.ssl_port", int(port))
+                options.set_preference("network.proxy.share_proxy_settings", True)
+                options.set_preference("network.proxy.no_proxies_on", "")  # Disable bypassing proxy
+                options.set_preference("network.proxy.allow_hijacking_localhost", True)  # Allow localhost interception
+                options.set_preference("devtools.console.stdout.content", True)
                 geco_driver_path = os.path.join(project_folder, 'Resources', 'geckodriver')
                 serv = FirefoxService(geco_driver_path)
-                proxy_driver = webdriver.Firefox(service=serv)
+                proxy_driver = webdriver.Firefox(service=serv, options=options)
             else:
                 pytest.skip("Mitmproxy unsupported on the browser")
         proxy_driver.implicitly_wait(10)
@@ -188,4 +209,9 @@ class BaseClass:
         yield proxy_driver
         proxy_driver.quit()
         mitmdump_process.terminate()
-        mitmdump_process.wait()
+        mitmdump_process.wait(timeout=10)
+        time.sleep(5)
+        if mitmdump_process:
+            print("Mitmproxy process did not terminate in time. Forcing termination...")
+            mitmdump_process.kill()
+            time.sleep(5)
