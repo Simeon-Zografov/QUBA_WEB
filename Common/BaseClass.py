@@ -65,6 +65,7 @@ class BaseClass:
                 options.add_argument("--headless")
                 geckodriver_driver_path = "/usr/bin/geckodriver"
                 serv = FirefoxService(geckodriver_driver_path)
+                webdriver.DesiredCapabilities.FIREFOX['proxy'] = {"proxyType": "direct"}
                 driver = webdriver.Firefox(service=serv, options=options)
             else:
                 options = SafariOptions()
@@ -80,6 +81,7 @@ class BaseClass:
             elif browser == "firefox":
                 geco_driver_path = os.path.join(project_folder, 'Resources', 'geckodriver')
                 serv = FirefoxService(geco_driver_path)
+                webdriver.DesiredCapabilities.FIREFOX['proxy'] = {"proxyType": "direct"}
                 driver = webdriver.Firefox(service=serv)
             else:
                 options = SafariOptions()

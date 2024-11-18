@@ -27,7 +27,7 @@ class TestContactPage(BaseClass):
         contact_obj = ContactPage(driver)
         main_nav_obj = MainNavigation(driver)
         driver.get(BaseClass.url)
-        main_nav_obj.wait_page_to_load(TestContactPage.current_browser)
+        main_nav_obj.wait_page_to_load()
         contact_obj.click_contact_button()
         with check, allure.step("Check the page title"):
             assert contact_obj.is_contact_page_title_visible()
