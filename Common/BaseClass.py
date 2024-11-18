@@ -157,6 +157,9 @@ class BaseClass:
                 options.set_preference("network.proxy.share_proxy_settings", True)
                 options.set_preference("network.proxy.no_proxies_on", "")  # Disable bypassing proxy
                 options.set_preference("network.proxy.allow_hijacking_localhost", True)  # Allow localhost interception
+                options.set_preference("dom.security.https_only_mode", False)  # Avoid HTTPS-only mode issues
+                options.set_preference("browser.cache.disk.enable", False)  # Disable caching to avoid stale data
+                options.set_preference("network.dns.disableIPv6", True)
                 options.set_preference("devtools.console.stdout.content", True)
                 geckodriver_driver_path = "/usr/bin/geckodriver"
                 serv = FirefoxService(geckodriver_driver_path)
