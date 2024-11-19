@@ -53,6 +53,25 @@ class Admin:
         self.about_single_faq_title = (By.XPATH, "//input[contains(@id, 'faq.FAQ')]")
         self.about_single_faq_description = (By.XPATH, "//label[contains(., 'FAQ')]/../../..//div["
                                                        "@role='textbox']//p//span[@data-slate-string='true']")
+        self.sponsors_page_button = (By.XPATH, "//span[.='Sponsors page']/../../..")
+        self.sponsors_heading_title = (By.ID, "heading.title")
+        self.sponsors_heading_description = (By.XPATH, "//label[contains(., 'heading')]/../../..//textarea")
+        self.sponsors_logo_elements = (By.XPATH, "//label[contains(.,'logos')]/../../..//div[@class ='sc-bdvvtL "
+                                                 "sc-gsDKAQ gZlYxz hGHhPZ']")
+        self.sponsors_logo_filename = (By.XPATH, "//label[contains(.,'logos')]/../../..//span[@class ='sc-dkPtRN cSldSA']")
+        self.sponsors_benefits_title = (By.ID, "benefits.sectionTitle.title")
+        self.sponsors_benefits_description = (By.XPATH, "//label[contains(., 'benefits')]/../../..//textarea")
+        self.sponsors_benefits_link_text = (By.ID, "benefits.sectionTitle.linkText")
+        self.sponsors_benefits_link_url = (By.ID, "benefits.sectionTitle.linkUrl")
+        self.sponsors_themes_elements = (By.XPATH, "//label[contains(., 'benefits')]/../../..//button["
+                                                   "@class='sc-bdvvtL sc-gsDKAQ sc-fWCJzd exHuNB kpZefO eJIDkS "
+                                                   "sc-eXlEPa gfLTwt']")
+        self.sponsors_themes_title = (By.XPATH, "//input[contains(@id, 'benefits.themes') and contains(@id, 'title')]")
+        self.sponsors_themes_description = (By.XPATH, "//label[contains(., 'themes')]/../../..//span[@data-slate-string='true']")
+
+
+
+
 
     def set_email(self):
         self.driver.find_element(*self.email_field).clear()
@@ -278,4 +297,71 @@ class Admin:
             "faq_description": self.get_faq_description_text(),
             "faq_elements": self.get_faq_elements()
         }
+        return content
+
+    def click_sponsors_page_button(self):
+        self.driver.find_element(*self.sponsors_page_button).click()
+
+    def get_sponsors_heading_title_value(self):
+        return self.driver.find_element(*self.sponsors_heading_title).get_attribute('value')
+
+    def get_sponsors_heading_description_text(self):
+        description_text = ""
+        elements = self.driver.find_elements(*self.about_heading_description)
+        for element in elements:
+            description_text = description_text + element.text.strip()
+        return description_text.strip()
+
+    def get_sponsors_logos_filenames(self):
+        filenames = []
+        elements = self.driver.find_elements(*self.sponsors_logo_elements)
+        for element in elements:
+            element.click()
+            filenames.append(self.driver.find_element(*self.sponsors_logo_filename).text)
+        return filenames
+
+    def get_sponsors_benefits_title_value(self):
+        return self.driver.find_element(*self.sponsors_benefits_title).get_attribute('value')
+
+    def get_sponsors_benefits_description_text(self):
+        return self.driver.find_element(*self.sponsors_benefits_description).text.replace("\n", "")
+
+    def get_sponsors_benefits_link_text(self):
+        return self.driver.find_element(*self.sponsors_benefits_link_text).get_attribute('value')
+
+    def get_sponsors_benefits_link_url(self):
+        return self.driver.find_element(*self.sponsors_benefits_link_url).get_attribute('value')
+
+    def get_themes_elements(self):
+        titles = []
+        descriptions = []
+        description_text = ""
+        elements = self.driver.find_elements(*self.sponsors_themes_elements)
+        for element in elements:
+            element.click()
+            title = self.driver.find_element(*self.sponsors_themes_title).get_attribute('value')
+            paragraphs = self.driver.find_elements(*self.sponsors_themes_description)
+            for paragraph in paragraphs:
+                description_text = description_text + paragraph.text.strip()
+            description_text = str(re.sub(' +', ' ', description_text))
+            titles.append(title)
+            descriptions.append(description_text)
+            description_text = ""
+        return titles, descriptions
+
+    def get_sponsors_page_content(self):
+        self.click_content_manager_button()
+        self.click_sponsors_page_button()
+        content = {
+            "heading_title": self.get_sponsors_heading_title_value(),
+            "heading_description": self.get_sponsors_heading_description_text(),
+            "logos": self.get_sponsors_logos_filenames(),
+            "benefits_title": self.get_sponsors_benefits_title_value(),
+            "benefits_description": self.get_sponsors_benefits_description_text(),
+            "benefits_link_text": self.get_sponsors_benefits_link_text(),
+            "benefits_link_url": self.get_sponsors_benefits_link_url()
+        }
+        titles, descriptions = self.get_themes_elements()
+        content["themes_titles"] = titles
+        content["themes_descriptions"] = descriptions
         return content

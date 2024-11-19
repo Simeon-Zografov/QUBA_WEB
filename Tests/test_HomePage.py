@@ -1,12 +1,7 @@
-import json
-import os
 import random
-import shutil
-import subprocess
 import time
 import allure
 import pytest
-from selenium import webdriver
 from pytest_check import check
 from allure import severity, severity_level
 from Common.APIRequests import APIRequests
@@ -16,7 +11,6 @@ from Pages.HomePage import HomePage
 from Pages.MainNavigation import MainNavigation
 from Pages.SitesPage import Sites
 from Common.BaseClass import BaseClass
-from selenium.webdriver.chrome.service import Service as ChromeService
 
 
 @pytest.mark.parametrize("driver", BaseClass.browsers, indirect=True)
