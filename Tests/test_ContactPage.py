@@ -44,7 +44,7 @@ class TestContactPage(BaseClass):
         contact_obj.set_email_field(random_email)
         contact_obj.set_message_field(random_message)
         contact_obj.click_send_message_button()
-        time.sleep(15)
+        time.sleep(25)
         with check, allure.step("Success message is visible"):
             assert contact_obj.is_success_message_visible()
         expected_email = f"Full name: {random_name}\r\nEmail address: {random_email}\r\nYour message: {random_message}\r\n"

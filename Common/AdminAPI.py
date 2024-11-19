@@ -1,6 +1,6 @@
 import re
 import requests
-from Common.BaseClass import BaseClass
+from Common.config import CMS_URL, CMS_EMAIL, CMS_PASSWORD
 
 
 class AdminAPI:
@@ -11,10 +11,10 @@ class AdminAPI:
     @staticmethod
     def get_bearer_token():
         body = {
-            "email": BaseClass.cms_email,
-            "password": BaseClass.cms_password
+            "email": CMS_EMAIL,
+            "password": CMS_PASSWORD
         }
-        url = BaseClass.cms_url + "/login"
+        url = CMS_URL + "/login"
         response = requests.post(url, data=body)
         if response.status_code == 200:
             response_data = response.json()
@@ -26,7 +26,7 @@ class AdminAPI:
             return None
 
     def get_sponsors_page_content(self):
-        url = BaseClass.cms_url.replace("/admin", "") + "/content-manager/single-types/api::sponsors-page.sponsors-page/?locale=en"
+        url = CMS_URL.replace("/admin", "") + "/content-manager/single-types/api::sponsors-page.sponsors-page/?locale=en"
         headers = {
             "Authorization": f"Bearer {self.token}"
         }
@@ -62,7 +62,7 @@ class AdminAPI:
             return None
 
     def get_about_page_content(self):
-        url = BaseClass.cms_url.replace("/admin", "") + "/content-manager/single-types/api::about-page.about-page/?locale=en"
+        url = CMS_URL.replace("/admin", "") + "/content-manager/single-types/api::about-page.about-page/?locale=en"
         headers = {
             "Authorization": f"Bearer {self.token}"
         }
@@ -106,7 +106,7 @@ class AdminAPI:
             return None
 
     def get_home_page_content(self):
-        url = BaseClass.cms_url.replace("/admin", "") + "/content-manager/single-types/api::home-page.home-page/?locale=en"
+        url = CMS_URL.replace("/admin", "") + "/content-manager/single-types/api::home-page.home-page/?locale=en"
         headers = {
             "Authorization": f"Bearer {self.token}"
         }

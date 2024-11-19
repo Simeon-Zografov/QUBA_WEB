@@ -1,7 +1,7 @@
 import email
 import imaplib
 
-from Common.BaseClass import BaseClass
+from Common.config import EMAIL, PASSWORD
 
 
 def get_last_email(email_address, password, from_email, browser):
@@ -47,7 +47,7 @@ def get_last_email(email_address, password, from_email, browser):
 
 
 def get_latest_email_subject(browser):
-    email_body = get_last_email(BaseClass.email, BaseClass.email_password, 'ci@hedgehoglab.com', browser)
+    email_body = get_last_email(EMAIL, PASSWORD, 'ci@hedgehoglab.com', browser)
     if email_body is not None:
         email_subject = email_body["Subject"]
         return email_subject
@@ -56,7 +56,7 @@ def get_latest_email_subject(browser):
 
 
 def get_latest_email_content(browser):
-    email_body = get_last_email(BaseClass.email, BaseClass.email_password, 'ci@hedgehoglab.com', browser)
+    email_body = get_last_email(EMAIL, PASSWORD, 'ci@hedgehoglab.com', browser)
     if email_body is not None:
         email_content = email_body["Content"]
         return email_content

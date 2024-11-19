@@ -13,22 +13,34 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.safari.options import Options as SafariOptions
 from selenium.webdriver.edge.service import Service as EdgeService
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from Common.APIRequests import APIRequests
+from Common.AdminAPI import AdminAPI
 
 
 class BaseClass:
+    home_page_content = None
+    sponsors_page_content = None
+    about_page_content = None
+    event_list = None
+    site_list = None
+
+    api_requests = APIRequests()
+    admin = AdminAPI()
+
     load_dotenv()
-    url = os.getenv("URL")
-    password = os.getenv("PASSWORD")
+
     browsers = os.getenv("BROWSERS")
-    email = os.getenv("EMAIL")
-    email_password = os.getenv("EMAIL_PASSWORD")
     browsers = browsers.split(", ")
-    api_url = os.getenv("APIURL")
-    kcurl = os.getenv("KCURL")
-    client_secret = os.getenv("CLIENT_SECRET")
-    cms_url = os.getenv("CMS_URL")
-    cms_email = os.getenv("CMS_EMAIL")
-    cms_password = os.getenv("CMS_PASSWORD")
+    url = os.getenv("URL")
+
+    @classmethod
+    def initialize_data(cls):
+        cls.site_list = cls.api_requests.get_sites_list()
+        cls.event_list = cls.api_requests.get_events_list()
+        cls.home_page_content = cls.admin.get_home_page_content()
+        cls.about_page_content = cls.admin.get_about_page_content()
+        cls.sponsors_page_content = cls.admin.get_sponsors_page_content()
+        print("Data was collected")
 
     @pytest.fixture(scope="class", autouse=True)
     def driver(self, request):
@@ -118,7 +130,8 @@ class BaseClass:
             port = "8081"
 
         mitmdump_process = subprocess.Popen([mitmdump_path, "-s", script_path, "--listen-port", port,
-                                             "--set", f"test_name={test_name}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) #
+                                             "--set", f"test_name={test_name}"], stdout=subprocess.DEVNULL,
+                                            stderr=subprocess.DEVNULL)  #
         time.sleep(5)
         if mitmdump_process:
             print("Proxy subprocess started")
@@ -187,7 +200,8 @@ class BaseClass:
                 options.add_argument(f'--proxy-server=http://127.0.0.1:{port}')
                 options.add_argument('--ignore-certificate-errors')
 
-                proxy_driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
+                proxy_driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()),
+                                              options=options)
             elif browser == "firefox":
                 options = FirefoxOptions()
                 # proxy = f'127.0.0.1:{port}'
@@ -220,3 +234,6 @@ class BaseClass:
             print("Mitmproxy process did not terminate in time. Forcing termination...")
             mitmdump_process.kill()
             time.sleep(5)
+
+
+BaseClass.initialize_data()

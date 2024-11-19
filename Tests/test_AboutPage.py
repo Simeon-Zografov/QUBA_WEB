@@ -2,7 +2,6 @@ import allure
 import pytest
 from pytest_check import check
 from allure import severity, severity_level
-from Common.AdminAPI import AdminAPI
 from Pages.AboutPage import AboutPage
 from Pages.HomePage import HomePage
 from Pages.MainNavigation import MainNavigation
@@ -18,11 +17,6 @@ class TestAboutPage(BaseClass):
     def setup(self, request):
         TestAboutPage.current_browser = request.node.callspec.params["driver"]
 
-    @classmethod
-    def setup_class(cls):
-        cls.admin = AdminAPI()
-        cls.about_page_content = cls.admin.get_about_page_content()
-
     @severity(severity_level.CRITICAL)
     @allure.feature('About page')
     @allure.title("User is navigated to the About page")
@@ -35,7 +29,7 @@ class TestAboutPage(BaseClass):
         driver.get(BaseClass.url)
         main_nav_obj.click_about_button()
         with check, allure.step("C58509: Check the page title"):
-            assert about_page_obj.is_about_page_title_visible(self.about_page_content["heading_title"])
+            assert about_page_obj.is_about_page_title_visible(BaseClass.about_page_content["heading_title"])
 
     @severity(severity_level.CRITICAL)
     @allure.feature('About page')
@@ -71,7 +65,7 @@ class TestAboutPage(BaseClass):
     def test_3(self, driver):
         about_page_obj = AboutPage(driver)
         with check, allure.step("C58510: Heading title text"):
-            assert about_page_obj.get_heading_title_text().strip() == self.about_page_content["heading_title"].strip()
+            assert about_page_obj.get_heading_title_text().strip() == BaseClass.about_page_content["heading_title"].strip()
 
     @severity(severity_level.NORMAL)
     @allure.feature('About page')
@@ -82,7 +76,7 @@ class TestAboutPage(BaseClass):
     def test_4(self, driver):
         about_page_obj = AboutPage(driver)
         with check, allure.step("C58511: Check Hero banner description"):
-            assert about_page_obj.get_heading_description_text().strip() == self.about_page_content["heading_description"].strip()
+            assert about_page_obj.get_heading_description_text().strip() == BaseClass.about_page_content["heading_description"].strip()
 
     @severity(severity_level.CRITICAL)
     @allure.feature('About page')
@@ -108,7 +102,7 @@ class TestAboutPage(BaseClass):
     def test_6(self, driver):
         about_page_obj = AboutPage(driver)
         with check, allure.step("C58514: Section title text"):
-            assert about_page_obj.get_themes_title_text().strip() == self.about_page_content[
+            assert about_page_obj.get_themes_title_text().strip() == BaseClass.about_page_content[
                 "themes_title"].strip()
 
     @severity(severity_level.NORMAL)
@@ -120,7 +114,7 @@ class TestAboutPage(BaseClass):
     def test_7(self, driver):
         about_page_obj = AboutPage(driver)
         with check, allure.step("C58515: Section description text"):
-            assert about_page_obj.get_themes_description_text().strip() == self.about_page_content[
+            assert about_page_obj.get_themes_description_text().strip() == BaseClass.about_page_content[
                 "themes_description"].strip()
 
     @severity(severity_level.NORMAL)
@@ -133,7 +127,7 @@ class TestAboutPage(BaseClass):
     @allure.testcase("58519", "C58519")
     def test_8(self, driver):
         about_page_obj = AboutPage(driver)
-        theme_cards = list(self.about_page_content["theme_elements"].keys())
+        theme_cards = list(BaseClass.about_page_content["theme_elements"].keys())
         theme_cards_number = len(theme_cards)
         with check, allure.step("C58516: Theme cards number is correct"):
             assert about_page_obj.get_theme_cards_number() == theme_cards_number
@@ -143,7 +137,7 @@ class TestAboutPage(BaseClass):
                 actual_title = about_page_obj.get_theme_card_title(i).strip()
                 assert actual_title == expected_title
             with check, allure.step(f"C58519: {theme_cards[i]} description is correct"):
-                expected_description = self.about_page_content["theme_elements"][theme_cards[i]].strip()
+                expected_description = BaseClass.about_page_content["theme_elements"][theme_cards[i]].strip()
                 actual_description = about_page_obj.get_theme_card_description(i).strip()
                 assert actual_description == expected_description
 
@@ -166,7 +160,7 @@ class TestAboutPage(BaseClass):
         with check, allure.step("C58522: Only one image is visible"):
             assert len(about_page_obj.get_images()) == 1
         with check, allure.step("C58522: The correct image is displayed"):
-            assert about_page_obj.get_images()[0] == self.about_page_content["gallery_images"][0]
+            assert about_page_obj.get_images()[0] == BaseClass.about_page_content["gallery_images"][0]
 
     @severity(severity_level.NORMAL)
     @allure.feature('About page')
@@ -176,7 +170,7 @@ class TestAboutPage(BaseClass):
     @allure.testcase("58523", "C58523")
     @pytest.mark.dependency(name="test_10")
     def test_10(self, driver):
-        if len(self.about_page_content["gallery_images"]) <= 1:
+        if len(BaseClass.about_page_content["gallery_images"]) <= 1:
             pytest.skip("Less images are uploaded in the CMS than required")
         about_page_obj = AboutPage(driver)
         about_page_obj.scroll_to_image_gallery(TestAboutPage.current_browser)
@@ -184,7 +178,7 @@ class TestAboutPage(BaseClass):
         i = 0
         for image in image_list:
             with check, allure.step(f"C58523: The image {image} is correct"):
-                assert image == self.about_page_content["gallery_images"][i]
+                assert image == BaseClass.about_page_content["gallery_images"][i]
             i = i + 1
         with check, allure.step("C58523: Next image button is visible"):
             assert about_page_obj.is_next_slide_button_visible()
@@ -295,7 +289,7 @@ class TestAboutPage(BaseClass):
     def test_14(self, driver):
         about_page_obj = AboutPage(driver)
         with check, allure.step("C58530: Section title text"):
-            assert about_page_obj.get_faq_title_text().strip() == self.about_page_content["faq_title"].strip()
+            assert about_page_obj.get_faq_title_text().strip() == BaseClass.about_page_content["faq_title"].strip()
 
     @severity(severity_level.NORMAL)
     @allure.feature('About page')
@@ -306,7 +300,7 @@ class TestAboutPage(BaseClass):
     def test_15(self, driver):
         about_page_obj = AboutPage(driver)
         with check, allure.step("C58531: Section description text"):
-            assert about_page_obj.get_faq_description_text().strip() == self.about_page_content[
+            assert about_page_obj.get_faq_description_text().strip() == BaseClass.about_page_content[
                 "faq_description"].strip()
 
     @severity(severity_level.NORMAL)
@@ -318,7 +312,7 @@ class TestAboutPage(BaseClass):
     @pytest.mark.dependency(name="test_16")
     def test_16(self, driver):
         about_page_obj = AboutPage(driver)
-        faq_elements = list(self.about_page_content["faq_elements"].keys())
+        faq_elements = list(BaseClass.about_page_content["faq_elements"].keys())
         faq_elements_number = len(faq_elements)
         with check, allure.step("C58526: Theme cards number is correct"):
             assert about_page_obj.get_faq_elements_number() == faq_elements_number
@@ -329,7 +323,7 @@ class TestAboutPage(BaseClass):
                 actual_question = about_page_obj.get_faq_element_question(i).strip()
                 assert actual_question == expected_question
             with check, allure.step(f"C58526: {faq_elements[i]} answer is correct"):
-                expected_answer = self.about_page_content["faq_elements"][faq_elements[i]].strip()
+                expected_answer = BaseClass.about_page_content["faq_elements"][faq_elements[i]].strip()
                 actual_answer = about_page_obj.get_faq_element_answer(i).strip()
                 assert actual_answer == expected_answer
 

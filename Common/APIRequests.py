@@ -1,6 +1,6 @@
 import re
 import requests
-from Common.BaseClass import BaseClass
+from Common.config import EMAIL, PASSWORD, CLIENT_SECRET, KCURL, API_URL
 
 
 class APIRequests:
@@ -12,14 +12,14 @@ class APIRequests:
     def get_bearer_token():
         body = {
             "grant_type": "password",
-            "username": BaseClass.email,
-            "password": BaseClass.password,
+            "username": EMAIL,
+            "password": PASSWORD,
             "client_id": "clm",
-            "client_secret": BaseClass.client_secret,
+            "client_secret": CLIENT_SECRET,
             "scope": "openid"
         }
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        response = requests.post(BaseClass.kcurl, data=body, headers=headers)
+        response = requests.post(KCURL, data=body, headers=headers)
         if response.status_code == 200:
             response_data = response.json()
             bearer_token = response_data.get("access_token")
@@ -30,7 +30,7 @@ class APIRequests:
             return None
 
     def get_sites_list(self):
-        url = f"{BaseClass.api_url}/site"
+        url = f"{API_URL}/site"
         headers = {
             "Authorization": f"Bearer {self.token}"
         }
@@ -55,7 +55,7 @@ class APIRequests:
             return None
 
     def get_individual_site(self, site_id):
-        url = f"{BaseClass.api_url}/site/{site_id}"
+        url = f"{API_URL}/site/{site_id}"
         headers = {
             "Authorization": f"Bearer {self.token}"
         }
@@ -85,7 +85,7 @@ class APIRequests:
             return None
 
     def get_events_list(self):
-        url = f"{BaseClass.api_url}/event"
+        url = f"{API_URL}/event"
         headers = {
             "Authorization": f"Bearer {self.token}"
         }

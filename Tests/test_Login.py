@@ -5,6 +5,7 @@ from allure import severity, severity_level
 from Pages.LoginPage import Login
 from Pages.MainNavigation import MainNavigation
 from Common.BaseClass import BaseClass
+from Common.config import EMAIL, PASSWORD
 
 
 @pytest.mark.parametrize("driver", BaseClass.browsers, indirect=True)
@@ -32,11 +33,11 @@ class TestLogin(BaseClass):
     @allure.feature('Login')
     @allure.title("Unsuccessfully login with email: {email} and password: {password}")
     @pytest.mark.parametrize('email,password,error', [
-        (BaseClass.email[:-1], BaseClass.password, "There was a problem logging you in. Please try again."),
-        (BaseClass.email, BaseClass.password[:-1], "There was a problem logging you in. Please try again."),
-        (BaseClass.email.replace("@", ""), BaseClass.password, "Please enter a valid email"),
-        ("", BaseClass.password, "Please enter your email"),
-        (BaseClass.email, "", "Please enter your password")
+        (EMAIL[:-1], PASSWORD, "There was a problem logging you in. Please try again."),
+        (EMAIL, PASSWORD[:-1], "There was a problem logging you in. Please try again."),
+        (EMAIL.replace("@", ""), PASSWORD, "Please enter a valid email"),
+        ("", PASSWORD, "Please enter your email"),
+        (EMAIL, "", "Please enter your password")
     ])
     def test_2(self, driver, email, password, error):
         current_browser = TestLogin.current_browser
@@ -65,8 +66,8 @@ class TestLogin(BaseClass):
         main_nav_obj = MainNavigation(driver)
         driver.refresh()
         main_nav_obj.wait_page_to_load()
-        login_obj.set_email_field(BaseClass.email, current_browser)
-        login_obj.set_password_field(BaseClass.password, current_browser)
+        login_obj.set_email_field(EMAIL, current_browser)
+        login_obj.set_password_field(PASSWORD, current_browser)
         login_obj.click_login_button()
         main_nav_obj.wait_page_to_load()
         with check, allure.step("Logout button is visible"):
