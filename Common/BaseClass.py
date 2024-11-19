@@ -93,7 +93,7 @@ class BaseClass:
                 options.page_load_strategy = 'eager'
                 driver = webdriver.Safari(options=options)
 
-        driver.implicitly_wait(10)
+        driver.implicitly_wait(20)
         driver.maximize_window()
         yield driver
         driver.quit()
