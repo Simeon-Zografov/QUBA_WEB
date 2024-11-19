@@ -2,9 +2,7 @@ import allure
 import pytest
 from pytest_check import check
 from allure import severity, severity_level
-
 from Common.AdminAPI import AdminAPI
-from Pages.Admin import Admin
 from Pages.MainNavigation import MainNavigation
 from Common.BaseClass import BaseClass
 from Pages.SponsorsPage import SponsorsPage
@@ -23,7 +21,6 @@ class TestSponsorsPage(BaseClass):
     def setup_class(cls):
         cls.admin = AdminAPI()
         cls.sponsors_page_content = cls.admin.get_sponsors_page_content()
-        print(cls.sponsors_page_content)
 
     @severity(severity_level.CRITICAL)
     @allure.feature('Sponsors page')

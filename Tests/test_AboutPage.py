@@ -2,8 +2,8 @@ import allure
 import pytest
 from pytest_check import check
 from allure import severity, severity_level
+from Common.AdminAPI import AdminAPI
 from Pages.AboutPage import AboutPage
-from Pages.Admin import Admin
 from Pages.HomePage import HomePage
 from Pages.MainNavigation import MainNavigation
 from Common.BaseClass import BaseClass
@@ -13,20 +13,15 @@ from Common.BaseClass import BaseClass
 @pytest.mark.flaky(reruns=3, reruns_delay=1)
 class TestAboutPage(BaseClass):
     current_browser = None
-    about_page_content = {'heading_title': 'The greatest historical city exploration experience in the world.', 'heading_description': 'Transforming Al Madinah into a living museum. Cras mattis consectetur purus sit amet fermentum. Sed posuere consectetur est at lobortis.', 'themes_title': 'The central themes of City Living Museum', 'themes_description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit sollicitudin nunc. Donec id elit non mi porta gravida at eget metus. Etiam porta sem malesuada magna mollis euismod.', 'theme_elements': {'Peace & Spirituality': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit sollicitudin nunc. Cras justo odio, dapibus ac facilisis in, egestas eget quam.Morbi leo risus, porta ac consectetur ac, vestibulum at eros.', 'Harmony': 'Morbi leo risus, porta ac consectetur ac, vestibulum at eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit.Fusce blandit sollicitudin nunc. Cras justo odio, dapibus ac facilisis in, egestas eget quam.', 'Connection to Nature': 'Fusce blandit sollicitudin nunc. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}, 'gallery_title': 'Image Gallery', 'gallery_description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit sollicitudin nunc. ', 'gallery_images': ['anna-jahn-LBKxu77KpSY-unsplash.jpg', 'malik-shibly-gm_Vztl7w84-unsplash.jpg', 'arisa-s-pir6n28Xrpw-unsplash.jpg', 'darrell-chaddock-j9er0YESGp0-unsplash.jpg', 'darwin-vegher-sKqKpescBgc-unsplash.jpg', 'koushik-chowdavarapu-aWBPk_GBaCk-unsplash.jpg', 'date_farm_cc1ff1c02d.jpg', 'bani-unaif.webp', 'patrick-hendry-hezNrE5QEa8-unsplash.jpg', 'masjid-quba-in-almadinah-new_crop-1160x650.jpg'], 'faq_title': 'Frequently Asked Questions', 'faq_description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit sollicitudin nunc. ', 'faq_elements': {'Lorem ipsum dolor sit amet, consectetur adipiscing elit, fusce blandit sollicitudin nunc?': 'Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum. Curabitur blandit tempus porttitor. Aenean lacinia bibendum nulla sed consectetur. Maecenas sed diam eget risus varius blandit sit amet non magna. Sed posuere consectetur est at lobortis. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.Donec id elit non mi porta gravida at eget metus. Aenean lacinia bibendum nulla sed consectetur. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.', 'Blandit sollicitudin nunc?': 'Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum. Curabitur blandit tempus porttitor. Aenean lacinia bibendum nulla sed consectetur. Maecenas sed diam eget risus varius blandit sit amet non magna. Sed posuere consectetur est at lobortis. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.Donec id elit non mi porta gravida at eget metus. Aenean lacinia bibendum nulla sed consectetur. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.', 'Ipsum dolor sit amet, consectetur adipiscing elit, fusce blandit sollicitudin nunc?': 'Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum. Curabitur blandit tempus porttitor. Aenean lacinia bibendum nulla sed consectetur. Maecenas sed diam eget risus varius blandit sit amet non magna. Sed posuere consectetur est at lobortis. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.Donec id elit non mi porta gravida at eget metus. Aenean lacinia bibendum nulla sed consectetur. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.', 'Lorem ipsum nunc?': 'Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum. Curabitur blandit tempus porttitor. Aenean lacinia bibendum nulla sed consectetur. Maecenas sed diam eget risus varius blandit sit amet non magna. Sed posuere consectetur est at lobortis. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.Donec id elit non mi porta gravida at eget metus. Aenean lacinia bibendum nulla sed consectetur. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.', 'Consectetur adipiscing elit, fusce blandit sollicitudin nunc?': 'Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum. Curabitur blandit tempus porttitor. Aenean lacinia bibendum nulla sed consectetur. Maecenas sed diam eget risus varius blandit sit amet non magna. Sed posuere consectetur est at lobortis. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.Donec id elit non mi porta gravida at eget metus. Aenean lacinia bibendum nulla sed consectetur. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.'}}
-    # about_page_content = {}
 
     @pytest.fixture(autouse=True)
     def setup(self, request):
         TestAboutPage.current_browser = request.node.callspec.params["driver"]
 
-    # @pytest.fixture(scope="class", autouse=True)
-    # def get_home_page_content(self, driver):
-    #     admin_obj = Admin(driver)
-    #     admin_obj.switch_to_admin()
-    #     TestAboutPage.about_page_content = admin_obj.get_about_page_content()
-    #     print(TestAboutPage.about_page_content)
-    #     admin_obj.close_admin()
+    @classmethod
+    def setup_class(cls):
+        cls.admin = AdminAPI()
+        cls.about_page_content = cls.admin.get_about_page_content()
 
     @severity(severity_level.CRITICAL)
     @allure.feature('About page')
@@ -40,7 +35,7 @@ class TestAboutPage(BaseClass):
         driver.get(BaseClass.url)
         main_nav_obj.click_about_button()
         with check, allure.step("C58509: Check the page title"):
-            assert about_page_obj.is_about_page_title_visible(TestAboutPage.about_page_content["heading_title"])
+            assert about_page_obj.is_about_page_title_visible(self.about_page_content["heading_title"])
 
     @severity(severity_level.CRITICAL)
     @allure.feature('About page')
@@ -76,7 +71,7 @@ class TestAboutPage(BaseClass):
     def test_3(self, driver):
         about_page_obj = AboutPage(driver)
         with check, allure.step("C58510: Heading title text"):
-            assert about_page_obj.get_heading_title_text().strip() == TestAboutPage.about_page_content["heading_title"].strip()
+            assert about_page_obj.get_heading_title_text().strip() == self.about_page_content["heading_title"].strip()
 
     @severity(severity_level.NORMAL)
     @allure.feature('About page')
@@ -87,7 +82,7 @@ class TestAboutPage(BaseClass):
     def test_4(self, driver):
         about_page_obj = AboutPage(driver)
         with check, allure.step("C58511: Check Hero banner description"):
-            assert about_page_obj.get_heading_description_text().strip() == TestAboutPage.about_page_content["heading_description"].strip()
+            assert about_page_obj.get_heading_description_text().strip() == self.about_page_content["heading_description"].strip()
 
     @severity(severity_level.CRITICAL)
     @allure.feature('About page')
@@ -113,7 +108,7 @@ class TestAboutPage(BaseClass):
     def test_6(self, driver):
         about_page_obj = AboutPage(driver)
         with check, allure.step("C58514: Section title text"):
-            assert about_page_obj.get_themes_title_text().strip() == TestAboutPage.about_page_content[
+            assert about_page_obj.get_themes_title_text().strip() == self.about_page_content[
                 "themes_title"].strip()
 
     @severity(severity_level.NORMAL)
@@ -125,7 +120,7 @@ class TestAboutPage(BaseClass):
     def test_7(self, driver):
         about_page_obj = AboutPage(driver)
         with check, allure.step("C58515: Section description text"):
-            assert about_page_obj.get_themes_description_text().strip() == TestAboutPage.about_page_content[
+            assert about_page_obj.get_themes_description_text().strip() == self.about_page_content[
                 "themes_description"].strip()
 
     @severity(severity_level.NORMAL)
@@ -138,7 +133,7 @@ class TestAboutPage(BaseClass):
     @allure.testcase("58519", "C58519")
     def test_8(self, driver):
         about_page_obj = AboutPage(driver)
-        theme_cards = list(TestAboutPage.about_page_content["theme_elements"].keys())
+        theme_cards = list(self.about_page_content["theme_elements"].keys())
         theme_cards_number = len(theme_cards)
         with check, allure.step("C58516: Theme cards number is correct"):
             assert about_page_obj.get_theme_cards_number() == theme_cards_number
@@ -148,7 +143,7 @@ class TestAboutPage(BaseClass):
                 actual_title = about_page_obj.get_theme_card_title(i).strip()
                 assert actual_title == expected_title
             with check, allure.step(f"C58519: {theme_cards[i]} description is correct"):
-                expected_description = TestAboutPage.about_page_content["theme_elements"][theme_cards[i]].strip()
+                expected_description = self.about_page_content["theme_elements"][theme_cards[i]].strip()
                 actual_description = about_page_obj.get_theme_card_description(i).strip()
                 assert actual_description == expected_description
 
@@ -171,7 +166,7 @@ class TestAboutPage(BaseClass):
         with check, allure.step("C58522: Only one image is visible"):
             assert len(about_page_obj.get_images()) == 1
         with check, allure.step("C58522: The correct image is displayed"):
-            assert about_page_obj.get_images()[0] == TestAboutPage.about_page_content["gallery_images"][0]
+            assert about_page_obj.get_images()[0] == self.about_page_content["gallery_images"][0]
 
     @severity(severity_level.NORMAL)
     @allure.feature('About page')
@@ -181,7 +176,7 @@ class TestAboutPage(BaseClass):
     @allure.testcase("58523", "C58523")
     @pytest.mark.dependency(name="test_10")
     def test_10(self, driver):
-        if len(TestAboutPage.about_page_content["gallery_images"]) <= 1:
+        if len(self.about_page_content["gallery_images"]) <= 1:
             pytest.skip("Less images are uploaded in the CMS than required")
         about_page_obj = AboutPage(driver)
         about_page_obj.scroll_to_image_gallery(TestAboutPage.current_browser)
@@ -189,7 +184,7 @@ class TestAboutPage(BaseClass):
         i = 0
         for image in image_list:
             with check, allure.step(f"C58523: The image {image} is correct"):
-                assert image == TestAboutPage.about_page_content["gallery_images"][i]
+                assert image == self.about_page_content["gallery_images"][i]
             i = i + 1
         with check, allure.step("C58523: Next image button is visible"):
             assert about_page_obj.is_next_slide_button_visible()
@@ -300,7 +295,7 @@ class TestAboutPage(BaseClass):
     def test_14(self, driver):
         about_page_obj = AboutPage(driver)
         with check, allure.step("C58530: Section title text"):
-            assert about_page_obj.get_faq_title_text().strip() == TestAboutPage.about_page_content["faq_title"].strip()
+            assert about_page_obj.get_faq_title_text().strip() == self.about_page_content["faq_title"].strip()
 
     @severity(severity_level.NORMAL)
     @allure.feature('About page')
@@ -311,7 +306,7 @@ class TestAboutPage(BaseClass):
     def test_15(self, driver):
         about_page_obj = AboutPage(driver)
         with check, allure.step("C58531: Section description text"):
-            assert about_page_obj.get_faq_description_text().strip() == TestAboutPage.about_page_content[
+            assert about_page_obj.get_faq_description_text().strip() == self.about_page_content[
                 "faq_description"].strip()
 
     @severity(severity_level.NORMAL)
@@ -323,7 +318,7 @@ class TestAboutPage(BaseClass):
     @pytest.mark.dependency(name="test_16")
     def test_16(self, driver):
         about_page_obj = AboutPage(driver)
-        faq_elements = list(TestAboutPage.about_page_content["faq_elements"].keys())
+        faq_elements = list(self.about_page_content["faq_elements"].keys())
         faq_elements_number = len(faq_elements)
         with check, allure.step("C58526: Theme cards number is correct"):
             assert about_page_obj.get_faq_elements_number() == faq_elements_number
@@ -334,7 +329,7 @@ class TestAboutPage(BaseClass):
                 actual_question = about_page_obj.get_faq_element_question(i).strip()
                 assert actual_question == expected_question
             with check, allure.step(f"C58526: {faq_elements[i]} answer is correct"):
-                expected_answer = TestAboutPage.about_page_content["faq_elements"][faq_elements[i]].strip()
+                expected_answer = self.about_page_content["faq_elements"][faq_elements[i]].strip()
                 actual_answer = about_page_obj.get_faq_element_answer(i).strip()
                 assert actual_answer == expected_answer
 
