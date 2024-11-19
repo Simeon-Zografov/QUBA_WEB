@@ -1,7 +1,5 @@
 import re
-
 import requests
-
 from Common.BaseClass import BaseClass
 
 
