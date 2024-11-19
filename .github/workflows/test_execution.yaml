@@ -38,6 +38,7 @@ on:
           - 'Login'
           - 'Sites Page'
           - 'Contact Page'
+          - 'Sponsors Page'
 
 jobs:
   chrome-test:
@@ -99,6 +100,8 @@ jobs:
               pytest Tests/test_Sites.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Contact Page' ]; then
               pytest Tests/test_ContactPage.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'Sponsors Page' ]; then
+              pytest Tests/test_SponsorsPage.py
             else
               echo "Invalid option"
             fi
@@ -192,6 +195,8 @@ jobs:
               pytest Tests/test_Sites.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Contact Page' ]; then
               pytest Tests/test_ContactPage.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'Sponsors Page' ]; then
+              pytest Tests/test_SponsorsPage.py
             else
               echo "Invalid option"
             fi
@@ -285,6 +290,8 @@ jobs:
               pytest Tests/test_Sites.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Contact Page' ]; then
               pytest Tests/test_ContactPage.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'Sponsors Page' ]; then
+              pytest Tests/test_SponsorsPage.py
             else
               echo "Invalid option"
             fi
@@ -377,6 +384,8 @@ jobs:
               pytest Tests/test_Sites.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Contact Page' ]; then
               pytest Tests/test_ContactPage.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'Sponsors Page' ]; then
+              pytest Tests/test_SponsorsPage.py
             else
               echo "Invalid option"
             fi
