@@ -80,6 +80,9 @@ jobs:
           APIURL: ${{ vars.APIURL }}
           KCURL: ${{ vars.KCURL }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          CMS_URL: ${{ vars.CMS_URL }}
+          CMS_EMAIL: ${{ secrets.CMS_EMAIL }}
+          CMS_PASSWORD: ${{ secrets.CMS_PASSWORD }}
 
         run: |
           mkdir -p allure-results
@@ -170,6 +173,9 @@ jobs:
           APIURL: ${{ vars.APIURL }}
           KCURL: ${{ vars.KCURL }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          CMS_URL: ${{ vars.CMS_URL }}
+          CMS_EMAIL: ${{ secrets.CMS_EMAIL }}
+          CMS_PASSWORD: ${{ secrets.CMS_PASSWORD }}
 
         run: |
           mkdir -p allure-results
@@ -260,6 +266,9 @@ jobs:
           APIURL: ${{ vars.APIURL }}
           KCURL: ${{ vars.KCURL }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          CMS_URL: ${{ vars.CMS_URL }}
+          CMS_EMAIL: ${{ secrets.CMS_EMAIL }}
+          CMS_PASSWORD: ${{ secrets.CMS_PASSWORD }}
 
         run: |
           mkdir -p allure-results
@@ -350,7 +359,9 @@ jobs:
           APIURL: ${{ vars.APIURL }}
           KCURL: ${{ vars.KCURL }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-
+          CMS_URL: ${{ vars.CMS_URL }}
+          CMS_EMAIL: ${{ secrets.CMS_EMAIL }}
+          CMS_PASSWORD: ${{ secrets.CMS_PASSWORD }}
         run: |
           mkdir -p allure-results
           if [ "${{ github.event_name }}" == 'schedule' ] || [ "${{ github.event.inputs.test_options }}" == 'All' ]; then
