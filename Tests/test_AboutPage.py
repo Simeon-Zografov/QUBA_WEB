@@ -153,7 +153,8 @@ class TestAboutPage(BaseClass):
         main_nav_obj = MainNavigation(proxy_driver)
         about_page_obj = AboutPage(proxy_driver)
         main_nav_obj.wait_page_to_load()
-        about_page_obj.scroll_to_image_gallery(self.current_browser)
+        # about_page_obj.scroll_to_image_gallery(self.current_browser)
+        proxy_driver.execute_script(f"window.scrollTo(0, 600);")
         with check, allure.step("C58522: Next image button is not visible"):
             assert not about_page_obj.is_next_slide_button_visible()
         with check, allure.step("C58522: Scroll bar is not visible"):
