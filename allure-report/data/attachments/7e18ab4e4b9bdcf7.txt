@@ -1,4 +1,0 @@
-Proxy subprocess started
-Screenshot saved at /home/runner/work/QUBA_WEB/QUBA_WEB/screenshot_20241120_091007.png
-Screenshot saved at /home/runner/work/QUBA_WEB/QUBA_WEB/screenshot_20241120_091009.png
-Mitmproxy process did not terminate in time. Forcing termination...
