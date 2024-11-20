@@ -159,6 +159,8 @@ class BaseClass:
                 options.add_argument("--disable-infobars")
                 options.add_argument(f'--proxy-server=https://127.0.0.1:{port}')
                 options.add_argument('--ignore-certificate-errors')
+                options.add_argument("--allow-insecure-localhost")
+                options.add_argument("--disable-http2")
                 serv = EdgeService(EdgeChromiumDriverManager().install())
                 proxy_driver = webdriver.Edge(service=serv, options=options)
             elif browser == "firefox":
