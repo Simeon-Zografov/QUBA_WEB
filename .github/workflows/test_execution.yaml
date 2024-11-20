@@ -204,7 +204,6 @@ jobs:
         working-directory: .
 
       - name: Upload screenshot artifacts
-        if: failure()  # Upload only if the test fails
         uses: actions/upload-artifact@v3
         with:
           name: screenshots
