@@ -155,6 +155,9 @@ class AboutPage:
 
     def scroll_to_image_gallery(self, browser):
         element = self.driver.find_element(*self.image_carousel)
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//div[@class='slide-container']"))
+        )
         self.scroll_to_element(element, browser)
 
     def scroll_right_in_image_gallery(self):
