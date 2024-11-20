@@ -1,5 +1,7 @@
 import allure
 import pytest
+import os
+from datetime import datetime
 from pytest_check import check
 from allure import severity, severity_level
 from Pages.AboutPage import AboutPage
@@ -154,6 +156,10 @@ class TestAboutPage(BaseClass):
         main_nav_obj = MainNavigation(proxy_driver)
         about_page_obj = AboutPage(proxy_driver)
         main_nav_obj.wait_page_to_load()
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        screenshot_path = os.path.join(os.getcwd(), f"screenshot_{timestamp}.png")
+        proxy_driver.save_screenshot(screenshot_path)
+        print(f"Screenshot saved at {screenshot_path}")
         about_page_obj.scroll_to_image_gallery(self.current_browser)
         # proxy_driver.execute_script(f"window.scrollTo(0, 600);")
         with check, allure.step("C58522: Next image button is not visible"):

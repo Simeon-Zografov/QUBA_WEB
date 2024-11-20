@@ -203,6 +203,13 @@ jobs:
           fi
         working-directory: .
 
+      - name: Upload screenshot artifacts
+        if: failure()  # Upload only if the test fails
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshots
+          path: "**/*.png"
+
       - name: Commit and push individual report to gh_pages
         if: always()
         continue-on-error: true
