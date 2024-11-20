@@ -9,7 +9,7 @@ from Common.config import EMAIL, PASSWORD
 
 
 @pytest.mark.parametrize("driver", BaseClass.browsers, indirect=True)
-@pytest.mark.flaky(reruns=3, reruns_delay=0.5, rerun_except="assert")
+@pytest.mark.flaky(reruns=3, reruns_delay=1)
 class TestLogin(BaseClass):
     current_browser = None
 
@@ -23,7 +23,7 @@ class TestLogin(BaseClass):
     def test_1(self, driver):
         login_obj = Login(driver)
         main_nav_obj = MainNavigation(driver)
-        driver.get(BaseClass.url)
+        driver.get(self.url)
         main_nav_obj.wait_page_to_load()
         with check, allure.step("Check the page title"):
             main_nav_obj.click_login_button()

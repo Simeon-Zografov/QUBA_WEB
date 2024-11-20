@@ -18,11 +18,11 @@ from Common.AdminAPI import AdminAPI
 
 
 class BaseClass:
-    home_page_content = None
-    sponsors_page_content = None
-    about_page_content = None
-    event_list = None
-    site_list = None
+    # home_page_content = None
+    # sponsors_page_content = None
+    # about_page_content = None
+    # event_list = None
+    # site_list = None
 
     api_requests = APIRequests()
     admin = AdminAPI()
@@ -40,7 +40,7 @@ class BaseClass:
         cls.home_page_content = cls.admin.get_home_page_content()
         cls.about_page_content = cls.admin.get_about_page_content()
         cls.sponsors_page_content = cls.admin.get_sponsors_page_content()
-        print("Data was collected")
+        cls.sites_page_content = cls.admin.get_sites_page_content()
 
     @pytest.fixture(scope="class", autouse=True)
     def driver(self, request):

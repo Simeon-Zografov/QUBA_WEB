@@ -106,6 +106,7 @@ class AboutPage:
         time.sleep(1)
 
     def is_next_slide_button_visible(self):
+        time.sleep(1)
         elements = self.driver.find_elements(*self.next_slide_button)
         if len(elements) > 0:
             return True
@@ -117,6 +118,7 @@ class AboutPage:
         time.sleep(1)
 
     def is_previous_slide_button_visible(self):
+        time.sleep(1)
         elements = self.driver.find_elements(*self.previous_slide_button)
         if len(elements) > 0:
             return True

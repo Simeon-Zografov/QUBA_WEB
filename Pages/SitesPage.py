@@ -1,3 +1,4 @@
+import re
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -8,7 +9,7 @@ def split_historic_and_retail_sites(site_list, site_type):
     filtered_sites = {}
     for site_id, site in site_list.items():
         if site["type"] == site_type:
-            filtered_sites[site_id] = {"title": site["title"], "summary": site["summary"]}
+            filtered_sites[site_id] = {"title": site["title"], "summary": site["summary"], "image": site["image"]}
     return filtered_sites
 
 
@@ -21,9 +22,14 @@ class Sites:
 
     def __init__(self, driver):
         self.driver = driver
-        self.sites_page_title = (By.XPATH, "//h1[.='Experience yesterday, today']")
+        self.sites_page_title = (By.XPATH, "//h1")
+        self.heading_description = (By.XPATH, "//div[@class='heading-top']//div")
+        self.app_tabs_title = (By.XPATH, "//div[@class='app-tabs']//h2")
+        self.app_tabs_description = (By.XPATH, "//div[@class='app-tabs']//div[@class='description']")
+
         self.historic_sites_button = (By.XPATH, "//button[@aria-controls='Historic']")
         self.retail_sites_button = (By.XPATH, "//button[@aria-controls='Retail']")
+        self.saved_sites_button = (By.XPATH, "//button[@aria-controls='savedSites']")
         self.historic_site_cards = (By.XPATH, "//div[@id='Historic']//div[@class='card app-carousel-card']")
         self.retail_site_cards = (By.XPATH, "//div[@id='Retail']//div[@class='card app-carousel-card']")
         self.next_pagination_button = (By.XPATH, "//button[@aria-label='Go to next page']")
@@ -36,16 +42,41 @@ class Sites:
         self.exhibit_section = (By.XPATH, "//h2[.='Exhibits at this site']")
         self.exhibit_cards = (By.XPATH, "//div[@class='card app-carousel-card']")
 
-    def is_sites_page_title_visible(self):
+    def is_sites_page_title_visible(self, title):
         wait = WebDriverWait(self.driver, 30)
-        page_title = wait.until(EC.visibility_of_element_located(self.sites_page_title))
+        page_title = wait.until(EC.visibility_of_element_located((By.XPATH, f"//h1[.='{title}']")))
         return page_title.is_displayed()
+
+    def is_heading_description_visible(self):
+        return self.driver.find_element(*self.heading_description).is_displayed()
+
+    def get_heading_title_text(self):
+        return self.driver.find_element(*self.sites_page_title).text
+
+    def get_heading_description_text(self):
+        return self.driver.find_element(*self.heading_description).text
+
+    def get_app_tabs_title_text(self):
+        return self.driver.find_element(*self.app_tabs_title).text
+
+    def get_app_tabs_description_text(self):
+        return self.driver.find_element(*self.app_tabs_description).text.strip()
 
     def click_historic_button(self):
         self.driver.find_element(*self.historic_sites_button).click()
 
     def click_retail_button(self):
         self.driver.find_element(*self.retail_sites_button).click()
+
+    def click_saved_sites_button(self):
+        self.driver.find_element(*self.saved_sites_button).click()
+
+    def is_saved_sites_button_visible(self):
+        button = self.driver.find_elements(*self.saved_sites_button)
+        if len(button) > 0:
+            return True
+        else:
+            return False
 
     def click_site_tab_button(self, site_type):
         self.driver.find_element(By.XPATH, f"//button[@aria-controls='{site_type}']").click()
@@ -69,6 +100,22 @@ class Sites:
 
     def get_site_card_summary(self, site_type, num):
         return self.driver.find_element(By.XPATH, f"(//div[@id='{site_type}']//div[@class='card-body']/p)[{num}]").text
+
+    def get_site_card_image(self, site_type, num):
+        src = self.driver.find_element(By.XPATH, f"(//div[@id='{site_type}']//div[@class='card-body']//img)[{num}]").get_attribute("src")
+        filename = re.search(r'([^/]+?\.[a-zA-Z0-9]+)(?=\);|$)', src)
+        if filename:
+            filename = filename.group(0)
+        return filename.replace("%20", " ")
+
+    def is_site_card_title_visible(self, site_type, num):
+        return self.driver.find_element(By.XPATH, f"(//div[@id='{site_type}']//div[@class='card-body']/h4)[{num}]").is_displayed()
+
+    def is_site_card_summary_visible(self, site_type, num):
+        return self.driver.find_element(By.XPATH, f"(//div[@id='{site_type}']//div[@class='card-body']/p)[{num}]").is_displayed()
+
+    def is_site_card_image_visible(self, site_type, num):
+        return self.driver.find_element(By.XPATH, f"(//div[@id='{site_type}']//div[@class='card-body']//img)[{num}]").is_displayed()
 
     def is_pagination_visible(self, site_type):
         element_list = self.driver.find_elements(By.XPATH, f"//div[@id='{site_type}']//ul[@aria-label='Pagination']")

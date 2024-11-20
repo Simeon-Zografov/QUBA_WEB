@@ -151,3 +151,35 @@ class AdminAPI:
             print("Request failed with status code:", response.status_code)
             print("Response content:", response.text)
             return None
+
+    def get_sites_page_content(self):
+        url = CMS_URL.replace("/admin", "") + "/content-manager/single-types/api::sites-page.sites-page/?locale=en"
+        headers = {
+            "Authorization": f"Bearer {self.token}"
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            response_data = response.json()
+            content = {}
+            description_text = ""
+            download_stats = {}
+            content["heading_title"] = response_data["heading"]["title"]
+            content["heading_description"] = response_data["heading"]["description"]
+            content["section_title"] = response_data["sectionTitle"]["title"]
+            content["section_description"] = response_data["sectionTitle"]["description"].strip()
+            content["download_title"] = response_data["postTabsDownload"]["title"]
+            for description in response_data["postTabsDownload"]["description"]:
+                for paragraph in description["children"]:
+                    description_text = description_text + paragraph["text"].replace("\n", "").strip()
+                description_text = str(re.sub(' +', ' ', description_text))
+            content["download_description"] = description_text
+            content["download_image"] = response_data["postTabsDownload"]["showcase"]["slides"][0]["name"]
+            for stat in response_data["postTabsDownload"]["stats"]:
+                format_value = f'{stat["value"]:,}'
+                download_stats[format_value] = stat["description"]
+            content["download_stats"] = download_stats
+            return content
+        else:
+            print("Request failed with status code:", response.status_code)
+            print("Response content:", response.text)
+            return None

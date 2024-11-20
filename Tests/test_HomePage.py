@@ -29,9 +29,9 @@ class TestHomePage(BaseClass):
     def test_1(self, driver):
         home_page_obj = HomePage(driver)
         main_nav_obj = MainNavigation(driver)
-        driver.get(BaseClass.url)
+        driver.get(self.url)
         with check, allure.step("Check the page title"):
-            assert home_page_obj.is_home_page_title_visible(BaseClass.home_page_content["hero_title"])
+            assert home_page_obj.is_home_page_title_visible(self.home_page_content["hero_title"])
         with check, allure.step("Logo is visible"):
             assert main_nav_obj.is_app_logo_visible()
 
@@ -81,7 +81,7 @@ class TestHomePage(BaseClass):
     def test_4(self, driver):
         home_page_obj = HomePage(driver)
         with check, allure.step("C58335: Check Hero banner image"):
-            assert home_page_obj.get_hero_banner_image() == BaseClass.home_page_content["hero_image"]
+            assert home_page_obj.get_hero_banner_image() == self.home_page_content["hero_image"]
 
     @severity(severity_level.NORMAL)
     @allure.feature('Home page')
@@ -92,7 +92,7 @@ class TestHomePage(BaseClass):
     def test_5(self, driver):
         home_page_obj = HomePage(driver)
         with check, allure.step("C58336: Check Hero banner title text"):
-            assert home_page_obj.get_hero_banner_title_text() == BaseClass.home_page_content["hero_title"]
+            assert home_page_obj.get_hero_banner_title_text() == self.home_page_content["hero_title"]
 
     @severity(severity_level.NORMAL)
     @allure.feature('Home page')
@@ -103,7 +103,7 @@ class TestHomePage(BaseClass):
     def test_6(self, driver):
         home_page_obj = HomePage(driver)
         with check, allure.step("C58337: Check Hero banner subtitle text"):
-            assert home_page_obj.get_hero_banner_subtitle_text() == BaseClass.home_page_content["hero_subtitle"]
+            assert home_page_obj.get_hero_banner_subtitle_text() == self.home_page_content["hero_subtitle"]
 
     @severity(severity_level.NORMAL)
     @allure.feature('Home page')
@@ -115,12 +115,12 @@ class TestHomePage(BaseClass):
         home_page_obj = HomePage(driver)
         main_nav_obj = MainNavigation(driver)
         with check, allure.step("C58338: Check Hero banner button text"):
-            assert home_page_obj.get_hero_banner_button_text().strip() == BaseClass.home_page_content[
+            assert home_page_obj.get_hero_banner_button_text().strip() == self.home_page_content[
                 "hero_link_text"].strip()
         with check, allure.step("C58338: Click Hero banner button"):
             home_page_obj.click_hero_banner_button()
             main_nav_obj.wait_page_to_load()
-            assert driver.current_url == BaseClass.url[:-1] + BaseClass.home_page_content["hero_link_url"]
+            assert driver.current_url == self.url[:-1] + self.home_page_content["hero_link_url"]
         main_nav_obj.click_home_button()
         main_nav_obj.wait_page_to_load()
 
@@ -154,7 +154,7 @@ class TestHomePage(BaseClass):
     def test_9(self, driver):
         home_page_obj = HomePage(driver)
         with check, allure.step("C58340: Check section image"):
-            assert home_page_obj.get_download_image() == BaseClass.home_page_content["download_image"]
+            assert home_page_obj.get_download_image() == self.home_page_content["download_image"]
 
     @severity(severity_level.NORMAL)
     @allure.feature('Home page')
@@ -165,7 +165,7 @@ class TestHomePage(BaseClass):
     def test_10(self, driver):
         home_page_obj = HomePage(driver)
         with check, allure.step("C58341: Check section title"):
-            assert home_page_obj.get_download_title_text() == BaseClass.home_page_content["download_title"]
+            assert home_page_obj.get_download_title_text() == self.home_page_content["download_title"]
 
     @severity(severity_level.NORMAL)
     @allure.feature('Home page')
@@ -176,7 +176,7 @@ class TestHomePage(BaseClass):
     def test_11(self, driver):
         home_page_obj = HomePage(driver)
         with check, allure.step("C58342: Check section description"):
-            assert home_page_obj.get_download_description_text() == BaseClass.home_page_content[
+            assert home_page_obj.get_download_description_text() == self.home_page_content[
                 "download_description"]
 
     @severity(severity_level.NORMAL)
@@ -187,8 +187,8 @@ class TestHomePage(BaseClass):
     @allure.testcase("58343", "C58343")
     def test_12(self, driver):
         home_page_obj = HomePage(driver)
-        stat_keys = list(BaseClass.home_page_content["download_stats"].keys())
-        stat_values = list(BaseClass.home_page_content["download_stats"].values())
+        stat_keys = list(self.home_page_content["download_stats"].keys())
+        stat_values = list(self.home_page_content["download_stats"].values())
         with check, allure.step("C58343: Check the number of pairs"):
             expected_number = len(stat_keys)
             actual_number = home_page_obj.get_stats_pairs_number()
@@ -246,7 +246,7 @@ class TestHomePage(BaseClass):
     def test_16(self, driver):
         home_page_obj = HomePage(driver)
         with check, allure.step("C58392: Check site carousel title"):
-            assert home_page_obj.get_site_carousel_title_text() == BaseClass.home_page_content["site_carousel_title"]
+            assert home_page_obj.get_site_carousel_title_text() == self.home_page_content["site_carousel_title"]
 
     @severity(severity_level.NORMAL)
     @allure.feature('Home page')
@@ -257,7 +257,7 @@ class TestHomePage(BaseClass):
     def test_17(self, driver):
         home_page_obj = HomePage(driver)
         with check, allure.step("C58393: Check site carousel description"):
-            assert home_page_obj.get_site_carousel_description_text().strip() == BaseClass.home_page_content[
+            assert home_page_obj.get_site_carousel_description_text().strip() == self.home_page_content[
                 "site_carousel_description"].strip()
 
     @severity(severity_level.NORMAL)
@@ -268,8 +268,8 @@ class TestHomePage(BaseClass):
     @allure.testcase("58394", "C58394")
     def test_18(self, driver):
         home_page_obj = HomePage(driver)
-        site_list = BaseClass.site_list
-        cms_sites = BaseClass.home_page_content["site_carousel_sites"]
+        site_list = self.site_list
+        cms_sites = self.home_page_content["site_carousel_sites"]
         with check, allure.step("C58394: Check site cards number"):
             assert home_page_obj.get_site_carousel_cards_number() == len(cms_sites.keys())
         i = 0
@@ -297,7 +297,7 @@ class TestHomePage(BaseClass):
     @allure.testcase("58397", "C58397")
     def test_19(self, driver):
         home_page_obj = HomePage(driver)
-        cms_sites = BaseClass.home_page_content["site_carousel_sites"]
+        cms_sites = self.home_page_content["site_carousel_sites"]
         correct_order = True
         for i in range(len(cms_sites.values())):
             if cms_sites[i].strip() != home_page_obj.get_site_carousel_card_title(i).strip():
@@ -315,12 +315,12 @@ class TestHomePage(BaseClass):
         home_page_obj = HomePage(driver)
         main_nav_obj = MainNavigation(driver)
         with check, allure.step("C58397: Check site carousel button text"):
-            assert home_page_obj.get_site_carousel_button_text().strip() == BaseClass.home_page_content[
+            assert home_page_obj.get_site_carousel_button_text().strip() == self.home_page_content[
                 "site_carousel_link_text"].strip()
         with check, allure.step("C58338: Click Hero banner button"):
             home_page_obj.click_site_carousel_button()
             main_nav_obj.wait_page_to_load()
-            assert driver.current_url == BaseClass.url[:-1] + BaseClass.home_page_content["site_carousel_link_url"]
+            assert driver.current_url == self.url[:-1] + self.home_page_content["site_carousel_link_url"]
         main_nav_obj.click_home_button()
         main_nav_obj.wait_page_to_load()
 
@@ -334,9 +334,9 @@ class TestHomePage(BaseClass):
         home_page_obj = HomePage(driver)
         main_nav_obj = MainNavigation(driver)
         sites_obj = Sites(driver)
-        sites_number = len(BaseClass.home_page_content["site_carousel_sites"].values())
+        sites_number = len(self.home_page_content["site_carousel_sites"].values())
         random_site = random.randrange(sites_number)
-        site_title = BaseClass.home_page_content["site_carousel_sites"][random_site]
+        site_title = self.home_page_content["site_carousel_sites"][random_site]
         with check, allure.step(f"User is navigated to {site_title} page"):
             home_page_obj.click_site_carousel_card(random_site)
             sites_obj.wait_individual_site_page_to_load()
@@ -354,7 +354,7 @@ class TestHomePage(BaseClass):
     @pytest.mark.dependency(name="test_22")
     def test_22(self, driver):
         home_page_obj = HomePage(driver)
-        events_list = BaseClass.event_list
+        events_list = self.event_list
         if len(list(events_list.keys())) == 0:
             pytest.skip("No events available")
         with check, allure.step("C58400: Check is event carousel title visible"):
@@ -378,7 +378,7 @@ class TestHomePage(BaseClass):
     def test_23(self, driver):
         home_page_obj = HomePage(driver)
         with check, allure.step("C58401: Check event carousel title"):
-            assert home_page_obj.get_event_carousel_title_text() == BaseClass.home_page_content[
+            assert home_page_obj.get_event_carousel_title_text() == self.home_page_content[
                 "event_carousel_title"]
 
     @severity(severity_level.NORMAL)
@@ -391,7 +391,7 @@ class TestHomePage(BaseClass):
     def test_24(self, driver):
         home_page_obj = HomePage(driver)
         with check, allure.step("C58402: Check event carousel description"):
-            assert home_page_obj.get_event_carousel_description_text().strip() == BaseClass.home_page_content[
+            assert home_page_obj.get_event_carousel_description_text().strip() == self.home_page_content[
                 "event_carousel_description"].strip()
 
     @severity(severity_level.NORMAL)
@@ -403,7 +403,7 @@ class TestHomePage(BaseClass):
     @pytest.mark.dependency(depends=["test_22"])
     def test_25(self, driver):
         home_page_obj = HomePage(driver)
-        events_list = BaseClass.event_list
+        events_list = self.event_list
         events_number = len(events_list.keys())
         with check, allure.step("C58403: Check event cards number"):
             if events_number > 3:
@@ -438,7 +438,7 @@ class TestHomePage(BaseClass):
     @pytest.mark.dependency(depends=["test_22"])
     def test_26(self, driver):
         home_page_obj = HomePage(driver)
-        events_list = BaseClass.event_list
+        events_list = self.event_list
         event_order = home_page_obj.get_last_three_chronological_ordered_events(events_list)
         i = 0
         for event_title in event_order:
@@ -457,12 +457,12 @@ class TestHomePage(BaseClass):
         home_page_obj = HomePage(driver)
         main_nav_obj = MainNavigation(driver)
         with check, allure.step("C58405: Check event carousel button text"):
-            assert home_page_obj.get_event_carousel_button_text().strip() == BaseClass.home_page_content[
+            assert home_page_obj.get_event_carousel_button_text().strip() == self.home_page_content[
                 "event_carousel_link_text"].strip()
         with check, allure.step("C58405: Click Hero banner button"):
             home_page_obj.click_event_carousel_button()
             main_nav_obj.wait_page_to_load()
-            assert driver.current_url == BaseClass.url[:-1] + BaseClass.home_page_content["event_carousel_link_url"]
+            assert driver.current_url == self.url[:-1] + self.home_page_content["event_carousel_link_url"]
         main_nav_obj.click_home_button()
         main_nav_obj.wait_page_to_load()
 
@@ -477,7 +477,7 @@ class TestHomePage(BaseClass):
         home_page_obj = HomePage(driver)
         main_nav_obj = MainNavigation(driver)
         events_obj = Events(driver)
-        events_list = BaseClass.event_list
+        events_list = self.event_list
         event_ids = list(events_list.keys())
         event_number = len(event_ids)
         if event_number >= 3:
@@ -500,7 +500,7 @@ class TestHomePage(BaseClass):
     @allure.testcase("58610", "C58610")
     @pytest.mark.parametrize("proxy_driver", ["home_page_test_29"], indirect=True)
     def test_29(self, proxy_driver):
-        proxy_driver.get(BaseClass.url)
+        proxy_driver.get(self.url)
         main_nav_obj = MainNavigation(proxy_driver)
         home_page_obj = HomePage(proxy_driver)
         main_nav_obj.wait_page_to_load()
@@ -516,10 +516,10 @@ class TestHomePage(BaseClass):
         sites_obj = Sites(driver)
         with check, allure.step("User is navigated to Sites page"):
             main_nav_obj.click_sites_button()
-            assert sites_obj.is_sites_page_title_visible()
+            assert sites_obj.is_sites_page_title_visible(self.sites_page_content["heading_title"])
         with check, allure.step("User is navigated to Home page"):
             main_nav_obj.click_home_button()
-            assert home_page_obj.is_home_page_title_visible(BaseClass.home_page_content["hero_title"])
+            assert home_page_obj.is_home_page_title_visible(self.home_page_content["hero_title"])
 
     @severity(severity_level.NORMAL)
     @allure.feature('Home page')

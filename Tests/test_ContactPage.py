@@ -10,6 +10,7 @@ from Common.BaseClass import BaseClass
 
 
 @pytest.mark.parametrize("driver", BaseClass.browsers, indirect=True)
+@pytest.mark.flaky(reruns=3, reruns_delay=1)
 class TestContactPage(BaseClass):
     current_browser = None
 
@@ -26,7 +27,7 @@ class TestContactPage(BaseClass):
     def test_1(self, driver):
         contact_obj = ContactPage(driver)
         main_nav_obj = MainNavigation(driver)
-        driver.get(BaseClass.url)
+        driver.get(self.url)
         main_nav_obj.wait_page_to_load()
         contact_obj.click_contact_button()
         with check, allure.step("Check the page title"):

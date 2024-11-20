@@ -16,11 +16,6 @@ class TestSponsorsPage(BaseClass):
     def setup(self, request):
         TestSponsorsPage.current_browser = request.node.callspec.params["driver"]
 
-    # @classmethod
-    # def setup_class(cls):
-    #     cls.admin = AdminAPI()
-    #     cls.sponsors_page_content = cls.admin.get_sponsors_page_content()
-
     @severity(severity_level.CRITICAL)
     @allure.feature('Sponsors page')
     @allure.title("User is navigated to the Sponsors page")
@@ -31,10 +26,10 @@ class TestSponsorsPage(BaseClass):
     def test_1(self, driver):
         sponsors_page_obj = SponsorsPage(driver)
         main_nav_obj = MainNavigation(driver)
-        driver.get(BaseClass.url)
+        driver.get(self.url)
         main_nav_obj.click_sponsors_button()
         with check, allure.step("C58557: Check the page title"):
-            assert sponsors_page_obj.is_sponsors_page_title_visible(BaseClass.sponsors_page_content["heading_title"])
+            assert sponsors_page_obj.is_sponsors_page_title_visible(self.sponsors_page_content["heading_title"])
 
     @severity(severity_level.NORMAL)
     @allure.feature('Sponsors page')
@@ -60,9 +55,9 @@ class TestSponsorsPage(BaseClass):
     def test_3(self, driver):
         sponsors_page_obj = SponsorsPage(driver)
         with check, allure.step("C58597: Check sponsors page heading title"):
-            assert sponsors_page_obj.get_heading_title_text().strip() == BaseClass.sponsors_page_content["heading_title"].strip()
+            assert sponsors_page_obj.get_heading_title_text().strip() == self.sponsors_page_content["heading_title"].strip()
         with check, allure.step("C58597: Check sponsors page heading description"):
-            assert sponsors_page_obj.get_heading_description_text() == BaseClass.sponsors_page_content["heading_description"]
+            assert sponsors_page_obj.get_heading_description_text() == self.sponsors_page_content["heading_description"]
 
     @severity(severity_level.NORMAL)
     @allure.feature('Sponsors page')
@@ -75,7 +70,7 @@ class TestSponsorsPage(BaseClass):
     @pytest.mark.dependency(depends=["test_1"])
     def test_4(self, driver):
         sponsors_page_obj = SponsorsPage(driver)
-        expected_cards = BaseClass.sponsors_page_content["logos"]
+        expected_cards = self.sponsors_page_content["logos"]
         with check, allure.step("C58565: Check sponsors cards number"):
             assert sponsors_page_obj.get_sponsor_cards_number() == len(expected_cards)
         with check, allure.step("C58564: Check are sponsors cards images"):
@@ -100,7 +95,7 @@ class TestSponsorsPage(BaseClass):
             assert sponsors_page_obj.is_get_involved_title_visible()
         with check, allure.step("C58567: Gen involved description is visible"):
             assert sponsors_page_obj.is_get_involved_description_visible()
-        if BaseClass.sponsors_page_content["benefits_link_text"] != "":
+        if self.sponsors_page_content["benefits_link_text"] != "":
             with check, allure.step("C58567: Gen involved button is visible"):
                 assert sponsors_page_obj.is_get_involved_button_visible()
         with check, allure.step("C58567: Benefits section is visible"):
@@ -116,7 +111,7 @@ class TestSponsorsPage(BaseClass):
     def test_6(self, driver):
         sponsors_page_obj = SponsorsPage(driver)
         with check, allure.step("C58568: Gen involved title is correct"):
-            expected_title = BaseClass.sponsors_page_content["benefits_title"].strip()
+            expected_title = self.sponsors_page_content["benefits_title"].strip()
             assert expected_title == sponsors_page_obj.get_get_involved_title_text().strip()
 
     @severity(severity_level.NORMAL)
@@ -129,7 +124,7 @@ class TestSponsorsPage(BaseClass):
     def test_7(self, driver):
         sponsors_page_obj = SponsorsPage(driver)
         with check, allure.step("C58569: Gen involved description is correct"):
-            expected_description = BaseClass.sponsors_page_content["benefits_description"]
+            expected_description = self.sponsors_page_content["benefits_description"]
             assert expected_description == sponsors_page_obj.get_get_involved_description_text()
 
     @severity(severity_level.NORMAL)
@@ -156,7 +151,7 @@ class TestSponsorsPage(BaseClass):
     def test_9(self, driver):
         sponsors_page_obj = SponsorsPage(driver)
         with check, allure.step("C58571: Check benefits elements number"):
-            expected_number = len(BaseClass.sponsors_page_content["themes_titles"])
+            expected_number = len(self.sponsors_page_content["themes_titles"])
             assert expected_number == sponsors_page_obj.get_benefits_elements_number()
 
     @severity(severity_level.NORMAL)
@@ -169,14 +164,14 @@ class TestSponsorsPage(BaseClass):
     @pytest.mark.dependency(depends=["test_1"])
     def test_10(self, driver):
         sponsors_page_obj = SponsorsPage(driver)
-        benefits_number = len(BaseClass.sponsors_page_content["themes_titles"])
+        benefits_number = len(self.sponsors_page_content["themes_titles"])
         actual_titles = sponsors_page_obj.get_benefits_title_text()
         actual_descriptions = sponsors_page_obj.get_benefits_description_text()
         for i in range(benefits_number):
             with check, allure.step(f"C58572: '{actual_titles[i]}' title is correct"):
-                assert actual_titles[i] == BaseClass.sponsors_page_content["themes_titles"][i]
+                assert actual_titles[i] == self.sponsors_page_content["themes_titles"][i]
             with check, allure.step(f"C58573: '{actual_titles[i]}' description is correct"):
-                assert actual_descriptions[i] == BaseClass.sponsors_page_content["themes_descriptions"][i]
+                assert actual_descriptions[i] == self.sponsors_page_content["themes_descriptions"][i]
 
     @severity(severity_level.NORMAL)
     @allure.feature('Sponsors page')
@@ -189,12 +184,12 @@ class TestSponsorsPage(BaseClass):
         sponsors_page_obj = SponsorsPage(driver)
         main_nav_obj = MainNavigation(driver)
         with check, allure.step("C58582: Check button text"):
-            expected_text = BaseClass.sponsors_page_content["benefits_link_text"]
+            expected_text = self.sponsors_page_content["benefits_link_text"]
             assert expected_text == sponsors_page_obj.get_get_involved_button_text()
         with check, allure.step("C58582: Click get in touch button"):
             sponsors_page_obj.click_get_involved_button()
             main_nav_obj.wait_page_to_load()
-            expected_url = BaseClass.url[:-1] + BaseClass.sponsors_page_content["benefits_link_url"]
+            expected_url = self.url[:-1] + self.sponsors_page_content["benefits_link_url"]
             assert driver.current_url == expected_url
         main_nav_obj.click_sponsors_button()
         main_nav_obj.wait_page_to_load()

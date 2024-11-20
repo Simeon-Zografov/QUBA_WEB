@@ -27,7 +27,9 @@ class ContactPage:
         return page_title.is_displayed()
 
     def is_success_message_visible(self):
-        return self.driver.find_element(*self.success_message).is_displayed()
+        wait = WebDriverWait(self.driver, 30)
+        message = wait.until(EC.visibility_of_element_located(self.success_message))
+        return message.is_displayed()
 
     def set_name_field(self, name):
         self.driver.find_element(*self.name_input_field).send_keys(name)
