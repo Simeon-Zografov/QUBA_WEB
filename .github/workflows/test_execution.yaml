@@ -203,12 +203,6 @@ jobs:
           fi
         working-directory: .
 
-      - name: Upload screenshot artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: screenshots
-          path: "**/*.png"
-
       - name: Commit and push individual report to gh_pages
         if: always()
         continue-on-error: true
