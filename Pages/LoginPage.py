@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from Pages.MainNavigation import MainNavigation
+
 
 class Login:
 
@@ -56,5 +58,14 @@ class Login:
 
     def get_credentials_error_message_text(self):
         return self.driver.find_element(*self.credentials_error_message).text
+
+    def full_log_in(self, email, password, browser):
+        main_nav_obj = MainNavigation(self.driver)
+        main_nav_obj.click_login_button()
+        self.set_email_field(email, browser)
+        self.set_password_field(password, browser)
+        self.click_login_button()
+        main_nav_obj.wait_page_to_load()
+
 
 

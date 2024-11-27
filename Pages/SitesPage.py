@@ -26,12 +26,13 @@ class Sites:
         self.heading_description = (By.XPATH, "//div[@class='heading-top']//div")
         self.app_tabs_title = (By.XPATH, "//div[@class='app-tabs']//h2")
         self.app_tabs_description = (By.XPATH, "//div[@class='app-tabs']//div[@class='description']")
-
+        self.tab_buttons_section = (By.XPATH, "//ul[@class='nav nav-tabs']")
         self.historic_sites_button = (By.XPATH, "//button[@aria-controls='Historic']")
         self.retail_sites_button = (By.XPATH, "//button[@aria-controls='Retail']")
         self.saved_sites_button = (By.XPATH, "//button[@aria-controls='savedSites']")
         self.historic_site_cards = (By.XPATH, "//div[@id='Historic']//div[@class='card app-carousel-card']")
         self.retail_site_cards = (By.XPATH, "//div[@id='Retail']//div[@class='card app-carousel-card']")
+        self.saved_site_cards = (By.XPATH, "//div[@id='savedSites']//div[@class='card app-carousel-card']")
         self.next_pagination_button = (By.XPATH, "//button[@aria-label='Go to next page']")
         self.individual_site_title = (By.XPATH, "//h1")
         self.individual_site_summary = (By.XPATH, "//div[@class='summary']")
@@ -41,6 +42,7 @@ class Sites:
         self.back_button = (By.XPATH, "//button[@class='btn btn-md btn-link app-button back-link icon-text']")
         self.exhibit_section = (By.XPATH, "//h2[.='Exhibits at this site']")
         self.exhibit_cards = (By.XPATH, "//div[@class='card app-carousel-card']")
+        self.empty_tab_section = (By.XPATH, "//div[@class='empty-tabs']")
 
     def is_sites_page_title_visible(self, title):
         wait = WebDriverWait(self.driver, 30)
@@ -70,6 +72,7 @@ class Sites:
 
     def click_saved_sites_button(self):
         self.driver.find_element(*self.saved_sites_button).click()
+        time.sleep(0.5)
 
     def is_saved_sites_button_visible(self):
         button = self.driver.find_elements(*self.saved_sites_button)
@@ -124,6 +127,13 @@ class Sites:
         else:
             return False
 
+    def is_saved_site_icon_visible(self, site_type, site_title):
+        icon = self.driver.find_elements(By.XPATH, f"//div[@id='{site_type}']//h4[contains(., '{site_title}')]//*[@class='app-icon card-pre-title-icon']")
+        if len(icon) != 0:
+            return True
+        else:
+            return False
+
     def get_site_cards_number(self, site_type):
         element_list = self.driver.find_elements(By.XPATH, f"//div[@id='{site_type}']//div[@class='card-body']")
         return len(element_list)
@@ -131,6 +141,15 @@ class Sites:
     def click_site_card(self, site_type, num):
         num = num + 1
         element = self.driver.find_element(By.XPATH, f"(//div[@id='{site_type}']//div[@class='card-body']/..)[{num}]")
+        location = element.location
+        x = location['x']
+        y = location['y']
+        self.driver.execute_script(f"window.scrollTo({x}, {y - 150});")
+        time.sleep(1)
+        element.click()
+
+    def click_saved_site_card(self, site_title):
+        element = self.driver.find_element(By.XPATH, f"//div[@id='savedSites']//h4[contains(., '{site_title}')]/../..")
         location = element.location
         x = location['x']
         y = location['y']
@@ -150,7 +169,7 @@ class Sites:
         time.sleep(1)
 
     def scroll_to_tab_buttons(self):
-        element = self.driver.find_element(*self.historic_sites_button)
+        element = self.driver.find_element(*self.tab_buttons_section)
         location = element.location
         x = location['x']
         y = location['y']
@@ -216,3 +235,17 @@ class Sites:
     def get_exhibit_cards_number(self):
         element_list = self.driver.find_elements(*self.exhibit_cards)
         return len(element_list)
+
+    def is_empty_tab_section_visible(self):
+        return self.driver.find_element(*self.empty_tab_section).is_displayed()
+
+    def are_saved_sites_cards_visible(self):
+        cards = self.driver.find_elements(*self.saved_site_cards)
+        if len(cards) != 0:
+            return True
+        else:
+            return False
+
+    def get_saved_sites_cards_number(self):
+        cards = self.driver.find_elements(*self.saved_site_cards)
+        return len(cards)

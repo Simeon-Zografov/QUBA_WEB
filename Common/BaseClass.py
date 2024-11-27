@@ -32,6 +32,7 @@ class BaseClass:
     browsers = os.getenv("BROWSERS")
     browsers = browsers.split(", ")
     url = os.getenv("URL")
+    current_browser = None
 
     @classmethod
     def initialize_data(cls):
@@ -45,7 +46,7 @@ class BaseClass:
     @pytest.fixture(scope="class", autouse=True)
     def driver(self, request):
         browser = request.param
-
+        BaseClass.current_browser = browser
         project_folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
         is_ci = os.getenv('CI') == 'true'

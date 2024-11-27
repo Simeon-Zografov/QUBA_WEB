@@ -5,14 +5,19 @@ from Common.config import EMAIL, PASSWORD, CLIENT_SECRET, KCURL, API_URL
 
 class APIRequests:
 
-    def __init__(self):
-        self.token = self.get_bearer_token()
+    def __init__(self, browser=None):
+        self.token = self.get_bearer_token(browser)
 
     @staticmethod
-    def get_bearer_token():
+    def get_bearer_token(browser):
+        if browser is not None:
+            email = EMAIL.replace("@", "+" + browser + "@")
+        else:
+            email = EMAIL
+        print(email)
         body = {
             "grant_type": "password",
-            "username": EMAIL,
+            "username": email,
             "password": PASSWORD,
             "client_id": "clm",
             "client_secret": CLIENT_SECRET,
@@ -115,3 +120,58 @@ class APIRequests:
             print("Request failed with status code:", response.status_code)
             print("Response content:", response.text)
             return None
+
+    def get_saved_sites_list(self):
+        url = f"{API_URL}/site/saved"
+        headers = {
+            "Authorization": f"Bearer {self.token}"
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            response_data = response.json()
+            sites = {}
+            for site in response_data:
+                site_id = site["id"]
+                site_title = site["attributes"]["title"]
+                site_summary = site["attributes"]["summary"]
+                site_type = site["attributes"]["type"]
+                site_image = site["attributes"]["assets"][0]["url"]
+                filename = re.search(r'([^/]+?\.[a-zA-Z0-9]+)(?=\);|$)', site_image)
+                if filename:
+                    filename = filename.group(0)
+                sites[site_id] = {"title": site_title, "summary": site_summary, "type": site_type, "image": filename}
+            return sites
+        else:
+            print("Request failed with status code:", response.status_code)
+            print("Response content:", response.text)
+            return None
+
+    def unsave_site(self, site_id):
+        url = f"{API_URL}/site/unsave"
+        body = {
+            "id": site_id
+        }
+        headers = {
+            "Authorization": f"Bearer {self.token}"
+        }
+        response = requests.post(url, data=body, headers=headers)
+        if response.status_code == 204:
+            print(f"Site {site_id} unsaved")
+        else:
+            print("Request failed with status code:", response.status_code)
+            print("Response content:", response.text)
+
+    def save_site(self, site_id):
+        url = f"{API_URL}/site/save"
+        body = {
+            "id": site_id
+        }
+        headers = {
+            "Authorization": f"Bearer {self.token}"
+        }
+        response = requests.post(url, data=body, headers=headers)
+        if response.status_code == 204:
+            print(f"Site {site_id} saved")
+        else:
+            print("Request failed with status code:", response.status_code)
+            print("Response content:", response.text)
