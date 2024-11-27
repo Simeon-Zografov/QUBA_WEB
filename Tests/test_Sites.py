@@ -358,7 +358,7 @@ class TestSites(BaseClass):
 
     @severity(severity_level.NORMAL)
     @allure.feature('Sites')
-    @allure.title("Click on saved site card")
+    @allure.title("Saved site icon on site cards")
     @allure.issue("QP-383", "Story QP-383")
     @allure.issue("QP-356", "Epic QP-356")
     @allure.testcase("58742", "C58742")
