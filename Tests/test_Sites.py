@@ -893,3 +893,65 @@ class TestSites(BaseClass):
         with check, allure.step(f"C58746: Site {self.random_site_info[site_id]['title']} is visible in the section"):
             assert sites_obj.is_site_card_visible_by_title(self.random_site_info[site_id]['type'],
                                                            self.random_site_info[site_id]['title'])
+
+    @severity(severity_level.CRITICAL)
+    @allure.feature('Individual Sites')
+    @allure.title("Saved site is visible in the mobile app")
+    @allure.issue("QP-283", "Story QP-283")
+    @allure.issue("QP-356", "Epic QP-356")
+    @allure.testcase("58747", "C58747")
+    def test_38(self, driver):
+        saved_sites = self.api_obj.get_saved_sites_list()
+        saved_sites_titles = []
+        for site_id, site in saved_sites.items():
+            saved_sites_titles.append(site[site_id]["title"])
+        site_id = list(self.random_site_info.keys())[0]
+        with check, allure.step(f"C58747: Site {self.random_site_info[site_id]['title']} is visible"):
+            assert self.random_site_info[site_id]['title'] in saved_sites_titles
+
+    @severity(severity_level.NORMAL)
+    @allure.feature('Individual Sites')
+    @allure.title("Unsave a site")
+    @allure.issue("QP-283", "Story QP-283")
+    @allure.issue("QP-356", "Epic QP-356")
+    @allure.testcase("58748", "C58748")
+    def test_39(self, driver):
+        sites_obj = Sites(driver)
+        main_nav_obj = MainNavigation(driver)
+        site_id = list(self.random_site_info.keys())[0]
+        sites_obj.click_site_card_by_title(self.random_site_info[site_id]["type"],
+                                           self.random_site_info[site_id]["title"])
+        sites_obj.click_save_site_button()
+        with check, allure.step(f"C58748: Save site icon is not filled"):
+            assert not sites_obj.is_save_site_icon_filled()
+        sites_obj.click_back_button()
+        main_nav_obj.wait_page_to_load()
+        with check, allure.step(f"C58748: Site is not visible in the saved sites section"):
+            assert not sites_obj.is_site_card_visible_by_title(self.random_site_info[site_id]["type"],
+                                                               self.random_site_info[site_id]["title"])
+
+    @severity(severity_level.NORMAL)
+    @allure.feature('Individual Sites')
+    @allure.title("Save site button for non logged user")
+    @allure.issue("QP-283", "Story QP-283")
+    @allure.issue("QP-356", "Epic QP-356")
+    @allure.testcase("58744", "C58744")
+    def test_40(self, driver):
+        sites_obj = Sites(driver)
+        main_nav_obj = MainNavigation(driver)
+        main_nav_obj.click_logout_button()
+        main_nav_obj.wait_page_to_load()
+        main_nav_obj.click_sites_button()
+        sites_obj.scroll_to_tab_buttons()
+        site_id = list(self.random_site_info.keys())[0]
+        sites_obj.click_site_tab_button(self.random_site_info[site_id]["type"])
+        while not sites_obj.is_site_card_visible_by_title(self.random_site_info[site_id]["type"],
+                                                          self.random_site_info[site_id]["title"]):
+            sites_obj.scroll_to_pagination()
+            sites_obj.click_next_pagination_button()
+            sites_obj.scroll_to_tab_buttons()
+        sites_obj.click_site_card_by_title(self.random_site_info[site_id]["type"],
+                                           self.random_site_info[site_id]["title"])
+        main_nav_obj.wait_page_to_load()
+        with check, allure.step(f"C58744: Save site button is not visible"):
+            assert not sites_obj.is_save_site_button_visible()
