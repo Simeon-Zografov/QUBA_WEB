@@ -43,6 +43,23 @@ class Sites:
         self.exhibit_section = (By.XPATH, "//h2[.='Exhibits at this site']")
         self.exhibit_cards = (By.XPATH, "//div[@class='card app-carousel-card']")
         self.empty_tab_section = (By.XPATH, "//div[@class='empty-tabs']")
+        self.single_site_header = (By.XPATH, "//header[@class='header']")
+        self.single_site_image_section = (By.XPATH, "//div[contains(@class, 'image-slider')]")
+        self.single_site_exhibit_section = (By.XPATH, "//div[@class='exhibits']")
+        self.single_site_travel_section = (By.XPATH, "//section[@class='site-travel-info']")
+        self.single_site_footer = (By.ID, "site-footer")
+        self.single_site_summary = (By.XPATH, "//div[@class='summary']")
+        self.single_site_about = (By.XPATH, "//div[@class='about']")
+        self.single_site_opening_times = (By.XPATH, "//div[@class='opening-times']")
+        self.single_site_location = (By.XPATH, "//div[@class='location']")
+        self.single_site_amenities = (By.XPATH, "//div[@class='amenities']")
+        self.single_site_get_directions_link = (By.XPATH, "//div[@class='location']//a")
+        self.single_site_exhibit_cards = (By.XPATH, "//div[@class='card app-carousel-card']")
+        self.single_site_exhibit_title = (By.XPATH, "//div[@class='card app-carousel-card']//h4")
+        self.single_site_exhibit_summary = (By.XPATH, "//div[@class='card app-carousel-card']//p")
+        self.single_site_exhibit_image = (By.XPATH, "//div[@class='card app-carousel-card']//img")
+        self.save_site_button = (By.XPATH, "//button[@class='save-button']")
+        self.save_site_icon = (By.XPATH, "//button[@class='save-button']//*[@class='app-icon save-icon']")
 
     def is_sites_page_title_visible(self, title):
         wait = WebDriverWait(self.driver, 30)
@@ -105,20 +122,25 @@ class Sites:
         return self.driver.find_element(By.XPATH, f"(//div[@id='{site_type}']//div[@class='card-body']/p)[{num}]").text
 
     def get_site_card_image(self, site_type, num):
-        src = self.driver.find_element(By.XPATH, f"(//div[@id='{site_type}']//div[@class='card-body']//img)[{num}]").get_attribute("src")
+        src = self.driver.find_element(By.XPATH,
+                                       f"(//div[@id='{site_type}']//div[@class='card-body']//img)[{num}]").get_attribute(
+            "src")
         filename = re.search(r'([^/]+?\.[a-zA-Z0-9]+)(?=\);|$)', src)
         if filename:
             filename = filename.group(0)
         return filename.replace("%20", " ")
 
     def is_site_card_title_visible(self, site_type, num):
-        return self.driver.find_element(By.XPATH, f"(//div[@id='{site_type}']//div[@class='card-body']/h4)[{num}]").is_displayed()
+        return self.driver.find_element(By.XPATH,
+                                        f"(//div[@id='{site_type}']//div[@class='card-body']/h4)[{num}]").is_displayed()
 
     def is_site_card_summary_visible(self, site_type, num):
-        return self.driver.find_element(By.XPATH, f"(//div[@id='{site_type}']//div[@class='card-body']/p)[{num}]").is_displayed()
+        return self.driver.find_element(By.XPATH,
+                                        f"(//div[@id='{site_type}']//div[@class='card-body']/p)[{num}]").is_displayed()
 
     def is_site_card_image_visible(self, site_type, num):
-        return self.driver.find_element(By.XPATH, f"(//div[@id='{site_type}']//div[@class='card-body']//img)[{num}]").is_displayed()
+        return self.driver.find_element(By.XPATH,
+                                        f"(//div[@id='{site_type}']//div[@class='card-body']//img)[{num}]").is_displayed()
 
     def is_pagination_visible(self, site_type):
         element_list = self.driver.find_elements(By.XPATH, f"//div[@id='{site_type}']//ul[@aria-label='Pagination']")
@@ -128,7 +150,8 @@ class Sites:
             return False
 
     def is_saved_site_icon_visible(self, site_type, site_title):
-        icon = self.driver.find_elements(By.XPATH, f"//div[@id='{site_type}']//h4[contains(., '{site_title}')]//*[@class='app-icon card-pre-title-icon']")
+        icon = self.driver.find_elements(By.XPATH,
+                                         f"//div[@id='{site_type}']//h4[contains(., '{site_title}')]//*[@class='app-icon card-pre-title-icon']")
         if len(icon) != 0:
             return True
         else:
@@ -148,14 +171,19 @@ class Sites:
         time.sleep(1)
         element.click()
 
-    def click_saved_site_card(self, site_title):
-        element = self.driver.find_element(By.XPATH, f"//div[@id='savedSites']//h4[contains(., '{site_title}')]/../..")
+    def click_site_card_by_title(self, site_type, site_title):
+        element = self.driver.find_element(By.XPATH, f"//div[@id='{site_type}']//h4[contains(., '{site_title}')]/../..")
         location = element.location
         x = location['x']
         y = location['y']
         self.driver.execute_script(f"window.scrollTo({x}, {y - 150});")
         time.sleep(1)
         element.click()
+
+    def is_site_card_visible_by_title(self, site_type, site_title):
+        time.sleep(5)
+        cards = self.driver.find_elements(By.XPATH, f"//div[@id='{site_type}']//h4[contains(., '{site_title}')]")
+        return True if len(cards) != 0 else False
 
     def click_next_pagination_button(self):
         self.driver.find_element(*self.next_pagination_button).click()
@@ -213,7 +241,16 @@ class Sites:
             return True
 
     def click_back_button(self):
-        self.driver.find_element(*self.back_button).click()
+        element = self.driver.find_element(*self.back_button)
+        location = element.location
+        x = location['x']
+        y = location['y']
+        self.driver.execute_script(f"window.scrollTo({x}, {y - 150});")
+        time.sleep(1)
+        element.click()
+
+    def is_back_button_visible(self):
+        return self.driver.find_element(*self.back_button).is_displayed()
 
     def wait_individual_site_page_to_load(self):
         wait = WebDriverWait(self.driver, 30)
@@ -249,3 +286,169 @@ class Sites:
     def get_saved_sites_cards_number(self):
         cards = self.driver.find_elements(*self.saved_site_cards)
         return len(cards)
+
+    def is_single_site_header_visible(self):
+        return self.driver.find_element(*self.single_site_header).is_displayed()
+
+    def is_single_site_image_section_visible(self):
+        return self.driver.find_element(*self.single_site_image_section).is_displayed()
+
+    def scroll_to_single_site_image_section(self):
+        element = self.driver.find_element(*self.single_site_image_section)
+        location = element.location
+        x = location['x']
+        y = location['y']
+        self.driver.execute_script(f"window.scrollTo({x}, {y - 150});")
+        time.sleep(1)
+
+    def is_single_site_exhibit_section_visible(self):
+        section = self.driver.find_elements(*self.single_site_exhibit_section)
+        if len(section) != 0:
+            return True
+        else:
+            return False
+
+    def is_single_site_travel_section_visible(self):
+        element = self.driver.find_element(*self.single_site_travel_section)
+        location = element.location
+        x = location['x']
+        y = location['y']
+        self.driver.execute_script(f"window.scrollTo({x}, {y - 150});")
+        time.sleep(1)
+        return element.is_displayed()
+
+    def is_single_site_footer_visible(self):
+        return self.driver.find_element(*self.single_site_footer).is_displayed()
+
+    @classmethod
+    def get_sites_with_conditions(cls, api_obj, sites_ids):
+        one_image_site = {}
+        several_images_site = {}
+        full_description_site = {}
+        site_with_exhibits = {}
+        site_without_exhibits = {}
+        for site_id in sites_ids:
+            temp_site = api_obj.get_individual_site(site_id)
+            if not bool(several_images_site) and len(temp_site[site_id]["images"]) >= 4:
+                several_images_site = temp_site
+            if not bool(one_image_site) and len(temp_site[site_id]["images"]) == 1:
+                one_image_site = temp_site
+            if not bool(site_with_exhibits) and len(temp_site[site_id]["exhibit"]) != 0:
+                site_with_exhibits = temp_site
+            if not bool(site_without_exhibits) and len(temp_site[site_id]["exhibit"]) == 0:
+                site_without_exhibits = temp_site
+            if (not bool(full_description_site) and len(temp_site[site_id]["facilities"]) != 0 and
+                    bool(temp_site[site_id]["opening_hours"]) and bool(temp_site[site_id]["address"])):
+                full_description_site = temp_site
+            if (bool(several_images_site) and bool(one_image_site) and bool(site_with_exhibits) and
+                    bool(site_without_exhibits) and bool(full_description_site)):
+                break
+        return one_image_site, several_images_site, full_description_site, site_with_exhibits, site_without_exhibits
+
+    def is_single_site_summary_visible(self):
+        return self.driver.find_element(*self.single_site_summary).is_displayed()
+
+    def get_single_site_summary_text(self):
+        return self.driver.find_element(*self.single_site_summary).text
+
+    def is_single_site_about_visible(self):
+        return self.driver.find_element(*self.single_site_about).is_displayed()
+
+    def get_single_site_about_text(self):
+        text = ""
+        element = self.driver.find_element(*self.single_site_about)
+        paragraphs = element.find_elements(By.XPATH, ".//p")
+        for paragraph in paragraphs:
+            text = text + paragraph.text.strip()
+        description_text = str(re.sub(' +', ' ', text))
+        return description_text.strip()
+
+    def is_single_site_opening_times_visible(self):
+        return self.driver.find_element(*self.single_site_opening_times).is_displayed()
+
+    def get_single_site_opening_times_text(self):
+        section = self.driver.find_element(*self.single_site_opening_times)
+        return section.find_element(By.XPATH, ".//div").text.replace("<br>", "")
+
+    def is_single_site_location_visible(self):
+        return self.driver.find_element(*self.single_site_location).is_displayed()
+
+    def get_single_site_location_text(self):
+        section = self.driver.find_element(*self.single_site_location)
+        return section.find_element(By.XPATH, ".//p[1]").text.replace("<br>", "")
+
+    def is_single_site_amenities_visible(self):
+        return self.driver.find_element(*self.single_site_amenities).is_displayed()
+
+    def get_single_site_amenities_list(self):
+        amenities_list = []
+        amenities_section = self.driver.find_element(*self.single_site_amenities)
+        amenities = amenities_section.find_elements(By.XPATH, ".//div[contains(@class, 'site-facility')]")
+        for amenity in amenities:
+            amenities_list.append(amenity.text.strip())
+        return amenities_list
+
+    def is_single_site_get_directions_link_visible(self):
+        return self.driver.find_element(*self.single_site_get_directions_link).is_displayed()
+
+    def click_single_site_get_directions_link(self, browser):
+        element = self.driver.find_element(*self.single_site_get_directions_link)
+        location = element.location
+        x = location['x']
+        y = location['y']
+        self.driver.execute_script(f"window.scrollTo({x}, {y - 150});")
+        time.sleep(1)
+        element.click()
+        if browser == "firefox" or browser == "safari":
+            time.sleep(3)
+
+    def get_single_site_exhibit_cards_number(self):
+        cards = self.driver.find_elements(*self.single_site_exhibit_cards)
+        return len(cards)
+
+    def get_single_site_exhibit_title(self, num):
+        titles = self.driver.find_elements(*self.single_site_exhibit_title)
+        return titles[num].text.strip()
+
+    def get_single_site_exhibit_summary(self, num):
+        summaries = self.driver.find_elements(*self.single_site_exhibit_summary)
+        return summaries[num].text.strip()
+
+    def get_single_site_exhibit_image(self, num):
+        images = self.driver.find_elements(*self.single_site_exhibit_image)
+        src = images[num].get_attribute("src")
+        filename = re.search(r'([^/]+?\.[a-zA-Z0-9]+)(?=\);|$)', src)
+        if filename:
+            filename = filename.group(0)
+        return filename.replace("%20", " ")
+
+    def scroll_to_exhibit_section(self):
+        element = self.driver.find_element(*self.single_site_exhibit_section)
+        location = element.location
+        x = location['x']
+        y = location['y']
+        self.driver.execute_script(f"window.scrollTo({x}, {y - 150});")
+        time.sleep(1)
+
+    def is_single_site_exhibit_card_clickable(self, num):
+        cards = self.driver.find_elements(*self.single_site_exhibit_cards)
+        link = cards[num].find_elements(By.XPATH, ".//a")
+        if len(link) != 0:
+            return True
+        else:
+            return False
+
+    def is_save_site_button_visible(self):
+        button = self.driver.find_elements(*self.save_site_button)
+        if len(button) != 0:
+            return True
+        else:
+            return False
+
+    def click_save_site_button(self):
+        self.driver.find_element(*self.save_site_button).click()
+        time.sleep(1)
+
+    def is_save_site_icon_filled(self):
+        fill = self.driver.find_element(*self.save_site_icon).get_attribute("fill")
+        return True if fill == "currentColor" else False

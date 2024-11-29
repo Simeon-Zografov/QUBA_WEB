@@ -61,11 +61,13 @@ class Login:
 
     def full_log_in(self, email, password, browser):
         main_nav_obj = MainNavigation(self.driver)
-        main_nav_obj.click_login_button()
-        self.set_email_field(email, browser)
-        self.set_password_field(password, browser)
-        self.click_login_button()
-        main_nav_obj.wait_page_to_load()
+        button = self.driver.find_elements(*main_nav_obj.login_button)
+        if len(button) != 0:
+            main_nav_obj.click_login_button()
+            self.set_email_field(email, browser)
+            self.set_password_field(password, browser)
+            self.click_login_button()
+            main_nav_obj.wait_page_to_load()
 
 
 
