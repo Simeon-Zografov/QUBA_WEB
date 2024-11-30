@@ -481,28 +481,30 @@ class TestSites(BaseClass):
         about_obj = AboutPage(driver)
         if len(list(self.several_images_site.keys())) == 0:
             pytest.skip("No sites available with several images")
-        several_images_site_id = list(self.several_images_site.keys())[0]
-        sites_obj.scroll_to_tab_buttons()
-        sites_obj.click_site_tab_button(self.several_images_site[several_images_site_id]["type"])
-        while not sites_obj.is_site_card_visible_by_title(self.several_images_site[several_images_site_id]["type"],
-                                                          self.several_images_site[several_images_site_id]["title"]):
-            sites_obj.scroll_to_pagination()
-            sites_obj.click_next_pagination_button()
+        site_id = list(self.several_images_site.keys())[0]
+        if sites_obj.is_sites_page_title_visible(self.sites_page_content["heading_title"]):
             sites_obj.scroll_to_tab_buttons()
-        sites_obj.click_site_card_by_title(self.several_images_site[several_images_site_id]["type"],
-                                           self.several_images_site[several_images_site_id]["title"])
-        main_nav_obj.wait_page_to_load()
+            sites_obj.click_site_tab_button(self.several_images_site[site_id]["type"])
+            while not sites_obj.is_site_card_visible_by_title(self.several_images_site[site_id]["type"],
+                                                              self.several_images_site[site_id]["title"]):
+                sites_obj.scroll_to_pagination()
+                sites_obj.click_next_pagination_button()
+                sites_obj.scroll_to_tab_buttons()
+            sites_obj.click_site_card_by_title(self.several_images_site[site_id]["type"],
+                                               self.several_images_site[site_id]["title"])
+            main_nav_obj.wait_page_to_load()
         sites_obj.scroll_to_single_site_image_section()
         image_list = about_obj.get_images()
         i = 0
         for image in image_list:
             with check, allure.step(f"C58413: The image {image} is correct"):
-                assert image == self.several_images_site[several_images_site_id]["images"][i]
+                assert image == self.several_images_site[site_id]["images"][i]
             i = i + 1
         with check, allure.step("C58413: Next image button is visible"):
             assert about_obj.is_next_slide_button_visible()
         with check, allure.step("C58413: Scroll bar is visible"):
             assert about_obj.is_image_carousel_scroll_visible()
+        driver.refresh()
 
     @severity(severity_level.MINOR)
     @allure.feature('Individual Sites')
@@ -904,7 +906,7 @@ class TestSites(BaseClass):
         saved_sites = self.api_obj.get_saved_sites_list()
         saved_sites_titles = []
         for site_id, site in saved_sites.items():
-            saved_sites_titles.append(site[site_id]["title"])
+            saved_sites_titles.append(site["title"])
         site_id = list(self.random_site_info.keys())[0]
         with check, allure.step(f"C58747: Site {self.random_site_info[site_id]['title']} is visible"):
             assert self.random_site_info[site_id]['title'] in saved_sites_titles
@@ -919,15 +921,14 @@ class TestSites(BaseClass):
         sites_obj = Sites(driver)
         main_nav_obj = MainNavigation(driver)
         site_id = list(self.random_site_info.keys())[0]
-        sites_obj.click_site_card_by_title(self.random_site_info[site_id]["type"],
-                                           self.random_site_info[site_id]["title"])
+        sites_obj.click_site_card_by_title("savedSites", self.random_site_info[site_id]["title"])
         sites_obj.click_save_site_button()
         with check, allure.step(f"C58748: Save site icon is not filled"):
             assert not sites_obj.is_save_site_icon_filled()
         sites_obj.click_back_button()
         main_nav_obj.wait_page_to_load()
         with check, allure.step(f"C58748: Site is not visible in the saved sites section"):
-            assert not sites_obj.is_site_card_visible_by_title(self.random_site_info[site_id]["type"],
+            assert not sites_obj.is_site_card_visible_by_title("savedSites",
                                                                self.random_site_info[site_id]["title"])
 
     @severity(severity_level.NORMAL)

@@ -439,7 +439,7 @@ class Sites:
             return False
 
     def is_save_site_button_visible(self):
-        button = self.driver.find_elements(*self.save_site_button)
+        button = self.driver.find_elements(*self.save_site_icon)
         if len(button) != 0:
             return True
         else:
