@@ -16,6 +16,11 @@ class Login:
         self.login_button = (By.XPATH, "//form[@class='login-form']//button[.='Log in']")
         self.field_error_message = (By.XPATH, "//ul[@class='invalid-feedback']/li")
         self.credentials_error_message = (By.XPATH, "//div[@role='alert']")
+        self.login_subtitle = (By.XPATH, "//div[@class='heading-top']//div")
+        self.forgot_password_link = (By.XPATH, "//a[.='Forgot your password?']")
+        self.create_account_link = (By.XPATH, "//a[contains(., 'Create one')]")
+        self.login_title_text = "Log in"
+        self.login_subtitle_text = "Log in to your Madinah Moments account"
 
     def is_login_page_title_visible(self):
         wait = WebDriverWait(self.driver, 30)
@@ -69,5 +74,33 @@ class Login:
             self.click_login_button()
             main_nav_obj.wait_page_to_load()
 
+    def is_login_subtitle_visible(self):
+        return self.driver.find_element(*self.login_subtitle).is_displayed()
 
+    def get_login_subtitle_text(self):
+        return self.driver.find_element(*self.login_subtitle).text
 
+    def is_email_field_visible(self):
+        return self.driver.find_element(*self.email_field).is_displayed()
+
+    def is_password_field_visible(self):
+        return self.driver.find_element(*self.password_field).is_displayed()
+
+    def is_login_button_visible(self):
+        return self.driver.find_element(*self.login_button).is_displayed()
+
+    def is_login_button_enabled(self):
+        button_class = self.driver.find_element(*self.login_button).get_attribute("class")
+        return False if "disabled" in button_class else True
+
+    def is_forgot_password_link_visible(self):
+        return self.driver.find_element(*self.forgot_password_link).is_displayed()
+
+    def is_create_account_link_visible(self):
+        return self.driver.find_element(*self.create_account_link).is_displayed()
+
+    def click_forgot_password_link(self):
+        self.driver.find_element(*self.forgot_password_link).click()
+
+    def click_create_account_link(self):
+        self.driver.find_element(*self.create_account_link).click()
