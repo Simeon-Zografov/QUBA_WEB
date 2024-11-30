@@ -482,7 +482,7 @@ class TestSites(BaseClass):
         if len(list(self.several_images_site.keys())) == 0:
             pytest.skip("No sites available with several images")
         site_id = list(self.several_images_site.keys())[0]
-        if sites_obj.is_sites_page_title_visible(self.sites_page_content["heading_title"]):
+        if sites_obj.is_heading_description_visible():
             sites_obj.scroll_to_tab_buttons()
             sites_obj.click_site_tab_button(self.several_images_site[site_id]["type"])
             while not sites_obj.is_site_card_visible_by_title(self.several_images_site[site_id]["type"],

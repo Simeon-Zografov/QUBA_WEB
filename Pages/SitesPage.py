@@ -67,7 +67,8 @@ class Sites:
         return page_title.is_displayed()
 
     def is_heading_description_visible(self):
-        return self.driver.find_element(*self.heading_description).is_displayed()
+        heading = self.driver.find_elements(*self.heading_description)
+        return True if len(heading) != 0 else False
 
     def get_heading_title_text(self):
         return self.driver.find_element(*self.sites_page_title).text
