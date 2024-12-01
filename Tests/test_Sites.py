@@ -893,8 +893,7 @@ class TestSites(BaseClass):
         sites_obj.click_saved_sites_button()
         site_id = list(self.random_site_info.keys())[0]
         with check, allure.step(f"C58746: Site {self.random_site_info[site_id]['title']} is visible in the section"):
-            assert sites_obj.is_site_card_visible_by_title(self.random_site_info[site_id]['type'],
-                                                           self.random_site_info[site_id]['title'])
+            assert sites_obj.is_site_card_visible_by_title("savedSites", self.random_site_info[site_id]['title'])
 
     @severity(severity_level.CRITICAL)
     @allure.feature('Individual Sites')

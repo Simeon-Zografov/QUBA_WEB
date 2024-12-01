@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from Common.BaseClass import BaseClass
+
 
 class AboutPage:
 
@@ -39,7 +41,8 @@ class AboutPage:
         self.parking_card_link = (By.XPATH, "//div[@class='card info-panel parking']//a")
         self.taxi_card_link = (By.XPATH, "//div[@class='card info-panel taxi']//a")
         self.cards_titles = ["Public transport", "Parking", "Taxis"]
-        self.card_descriptions = ["The site is accessible by public transport.", "There is parking available at the site.",
+        self.card_descriptions = ["The site is accessible by public transport.",
+                                  "There is parking available at the site.",
                                   "Taxis are available to and from the site."]
 
     def is_about_page_title_visible(self, title):
@@ -61,7 +64,7 @@ class AboutPage:
 
     def is_transport_section_visible(self, browser):
         element = self.driver.find_element(*self.transport_section)
-        self.scroll_to_element(element, browser)
+        BaseClass.scroll_to_element(self.driver, element, browser)
         return element.is_displayed()
 
     def get_heading_title_text(self):
@@ -160,7 +163,7 @@ class AboutPage:
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "//div[@class='slide-container']"))
         )
-        self.scroll_to_element(element, browser)
+        BaseClass.scroll_to_element(self.driver, element, browser)
 
     def scroll_right_in_image_gallery(self):
         element = self.driver.find_element(*self.image_carousel)
@@ -197,7 +200,7 @@ class AboutPage:
 
     def click_faq_element(self, num, browser):
         elements = self.driver.find_elements(*self.faq_element_question)
-        self.scroll_to_element(elements[num], browser)
+        BaseClass.scroll_to_element(self.driver, elements[num], browser)
         elements[num].click()
         time.sleep(0.5)
 
@@ -227,11 +230,11 @@ class AboutPage:
 
     def scroll_to_faq_section(self, browser):
         element = self.driver.find_element(*self.faq_section)
-        self.scroll_to_element(element, browser)
+        BaseClass.scroll_to_element(self.driver, element, browser)
 
     def scroll_to_transport_section(self, browser):
         element = self.driver.find_element(*self.transport_section)
-        self.scroll_to_element(element, browser)
+        BaseClass.scroll_to_element(self.driver, element, browser)
 
     def is_public_transport_card_visible(self):
         return self.driver.find_element(*self.public_transport_card).is_displayed()
@@ -258,13 +261,3 @@ class AboutPage:
 
     def click_taxi_card_link(self):
         self.driver.find_element(*self.taxi_card_link).click()
-
-    def scroll_to_element(self, element, browser):
-        location = element.location
-        x = location['x']
-        y = location['y']
-        if browser == 'safari':
-            self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
-        else:
-            self.driver.execute_script(f"window.scrollTo({x}, {y - 150});")
-        time.sleep(1)

@@ -26,7 +26,8 @@ class AdminAPI:
             return None
 
     def get_sponsors_page_content(self):
-        url = CMS_URL.replace("/admin", "") + "/content-manager/single-types/api::sponsors-page.sponsors-page/?locale=en"
+        url = CMS_URL.replace("/admin", "") + ("/content-manager/single-types/api::sponsors-page.sponsors-page/?locale"
+                                               "=en")
         headers = {
             "Authorization": f"Bearer {self.token}"
         }
@@ -178,6 +179,37 @@ class AdminAPI:
                 format_value = f'{stat["value"]:,}'
                 download_stats[format_value] = stat["description"]
             content["download_stats"] = download_stats
+            return content
+        else:
+            print("Request failed with status code:", response.status_code)
+            print("Response content:", response.text)
+            return None
+
+    def get_contact_page_content(self):
+        url = CMS_URL.replace("/admin", "") + ("/content-manager/single-types/api::contact-page.contact-page?plugins["
+                                               "i18n][locale]=en")
+        headers = {
+            "Authorization": f"Bearer {self.token}"
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            response_data = response.json()
+            content = {}
+            detail_text = ""
+            details = {}
+            content["heading_title"] = response_data["heading"]["title"]
+            content["heading_description"] = response_data["heading"]["description"]
+            for detail_item in response_data["secondaryDetails"]["items"]:
+                item_title = detail_item["title"]
+                for paragraph in detail_item["content"]:
+                    for child in paragraph["children"]:
+                        if child["type"] == "text" and child["text"] != "":
+                            detail_text = detail_text + child["text"].replace("\n", "").strip()
+                        elif child["type"] == "link":
+                            detail_text = detail_text + child["children"][0]["text"].replace("\n", "").strip()
+                details[item_title] = detail_text
+                detail_text = ""
+            content["details"] = details
             return content
         else:
             print("Request failed with status code:", response.status_code)

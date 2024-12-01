@@ -14,6 +14,7 @@ class MainNavigation:
         self.sites_button = (By.XPATH, "//a[.='Sites']")
         self.about_button = (By.XPATH, "//a[.='About']")
         self.sponsors_button = (By.XPATH, "//a[.='Sponsors']")
+        self.contact_button = (By.XPATH, "//a[.='Contact']")
         self.login_button = (By.XPATH, "//a[.='Log in']")
         self.logout_button = (By.XPATH, "//button[.='Log out']")
         self.language_switch_button = (By.ID, "lang-switcher")
@@ -39,6 +40,9 @@ class MainNavigation:
 
     def click_sponsors_button(self):
         self.driver.find_element(*self.sponsors_button).click()
+
+    def click_contact_button(self):
+        self.driver.find_element(*self.contact_button).click()
 
     def click_login_button(self):
         self.driver.find_element(*self.login_button).click()

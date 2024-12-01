@@ -11,11 +11,6 @@ from Common.BaseClass import BaseClass
 @pytest.mark.parametrize("driver", BaseClass.browsers, indirect=True)
 @pytest.mark.flaky(reruns=3, reruns_delay=1)
 class TestAboutPage(BaseClass):
-    current_browser = None
-
-    @pytest.fixture(autouse=True)
-    def setup(self, request):
-        TestAboutPage.current_browser = request.node.callspec.params["driver"]
 
     @severity(severity_level.CRITICAL)
     @allure.feature('About page')
@@ -52,7 +47,7 @@ class TestAboutPage(BaseClass):
         with check, allure.step("C58512: FAQ section is visible"):
             assert about_page_obj.is_faq_section_visible()
         with check, allure.step("C58512: Transport section is visible"):
-            assert about_page_obj.is_transport_section_visible(TestAboutPage.current_browser)
+            assert about_page_obj.is_transport_section_visible(self.current_browser)
         with check, allure.step("C58512: Page footer is visible"):
             assert home_page_obj.is_app_footer_visible()
 
@@ -174,7 +169,7 @@ class TestAboutPage(BaseClass):
         if len(self.about_page_content["gallery_images"]) <= 1:
             pytest.skip("Less images are uploaded in the CMS than required")
         about_page_obj = AboutPage(driver)
-        about_page_obj.scroll_to_image_gallery(TestAboutPage.current_browser)
+        about_page_obj.scroll_to_image_gallery(self.current_browser)
         image_list = about_page_obj.get_images()
         i = 0
         for image in image_list:
@@ -185,6 +180,7 @@ class TestAboutPage(BaseClass):
             assert about_page_obj.is_next_slide_button_visible()
         with check, allure.step("C58523: Scroll bar is visible"):
             assert about_page_obj.is_image_carousel_scroll_visible()
+        driver.refresh()
 
     @severity(severity_level.NORMAL)
     @allure.feature('About page')
@@ -195,6 +191,7 @@ class TestAboutPage(BaseClass):
     @pytest.mark.dependency(depends=["test_10"])
     def test_11(self, driver):
         about_page_obj = AboutPage(driver)
+        about_page_obj.scroll_to_image_gallery(self.current_browser)
         with check, allure.step("C58524: Initially next is visible and previous is not"):
             assert about_page_obj.is_next_slide_button_visible() and not about_page_obj.is_previous_slide_button_visible()
         with check, allure.step("C58524: Carousel position is at the start"):
@@ -319,7 +316,7 @@ class TestAboutPage(BaseClass):
             assert about_page_obj.get_faq_elements_number() == faq_elements_number
         for i in range(faq_elements_number):
             with check, allure.step(f"C58526: {faq_elements[i]} question is correct"):
-                about_page_obj.click_faq_element(i, TestAboutPage.current_browser)
+                about_page_obj.click_faq_element(i, self.current_browser)
                 expected_question = faq_elements[i].strip()
                 actual_question = about_page_obj.get_faq_element_question(i).strip()
                 assert actual_question == expected_question
@@ -339,7 +336,7 @@ class TestAboutPage(BaseClass):
         about_page_obj = AboutPage(driver)
         for i in range(about_page_obj.get_faq_elements_number()):
             with check, allure.step(f"C58528: {about_page_obj.get_faq_element_question(i)} is collapsed"):
-                about_page_obj.click_faq_element(i, TestAboutPage.current_browser)
+                about_page_obj.click_faq_element(i, self.current_browser)
                 assert not about_page_obj.is_faq_element_expanded(i)
 
     @severity(severity_level.NORMAL)
@@ -353,7 +350,7 @@ class TestAboutPage(BaseClass):
         about_page_obj = AboutPage(driver)
         for i in range(about_page_obj.get_faq_elements_number()):
             with check, allure.step(f"C58527: {about_page_obj.get_faq_element_question(i)} is expanded"):
-                about_page_obj.click_faq_element(i, TestAboutPage.current_browser)
+                about_page_obj.click_faq_element(i, self.current_browser)
                 assert about_page_obj.is_faq_element_expanded(i)
 
     @severity(severity_level.NORMAL)
@@ -408,7 +405,7 @@ class TestAboutPage(BaseClass):
     def test_22(self, driver):
         about_page_obj = AboutPage(driver)
         main_nav_obj = MainNavigation(driver)
-        about_page_obj.scroll_to_transport_section(TestAboutPage.current_browser)
+        about_page_obj.scroll_to_transport_section(self.current_browser)
         with check, allure.step("C58536: Click public transport link"):
             about_page_obj.click_public_transport_card_link()
             main_nav_obj.wait_page_to_load()
@@ -425,7 +422,7 @@ class TestAboutPage(BaseClass):
     def test_23(self, driver):
         about_page_obj = AboutPage(driver)
         main_nav_obj = MainNavigation(driver)
-        about_page_obj.scroll_to_transport_section(TestAboutPage.current_browser)
+        about_page_obj.scroll_to_transport_section(self.current_browser)
         with check, allure.step("C58537: Click parking link"):
             about_page_obj.click_parking_card_link()
             main_nav_obj.wait_page_to_load()
@@ -442,7 +439,7 @@ class TestAboutPage(BaseClass):
     def test_24(self, driver):
         about_page_obj = AboutPage(driver)
         main_nav_obj = MainNavigation(driver)
-        about_page_obj.scroll_to_transport_section(TestAboutPage.current_browser)
+        about_page_obj.scroll_to_transport_section(self.current_browser)
         with check, allure.step("C58538: Click taxi link"):
             about_page_obj.click_taxi_card_link()
             main_nav_obj.wait_page_to_load()

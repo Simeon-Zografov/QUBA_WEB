@@ -42,6 +42,7 @@ class BaseClass:
         cls.about_page_content = cls.admin.get_about_page_content()
         cls.sponsors_page_content = cls.admin.get_sponsors_page_content()
         cls.sites_page_content = cls.admin.get_sites_page_content()
+        cls.contact_page_content = cls.admin.get_contact_page_content()
 
     @pytest.fixture(scope="class", autouse=True)
     def driver(self, request):
@@ -237,6 +238,17 @@ class BaseClass:
             print("Mitmproxy process did not terminate in time. Forcing termination...")
             mitmdump_process.kill()
             time.sleep(5)
+
+    @classmethod
+    def scroll_to_element(cls, driver, element, browser):
+        location = element.location
+        x = location['x']
+        y = location['y']
+        if browser == 'safari':
+            driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+        else:
+            driver.execute_script(f"window.scrollTo({x}, {y - 150});")
+        time.sleep(1)
 
 
 BaseClass.initialize_data()
