@@ -2,9 +2,12 @@ import os
 import shutil
 import subprocess
 import time
+from urllib.parse import urlparse
+
 import pytest
 from dotenv import load_dotenv
 from selenium import webdriver
+from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -18,11 +21,6 @@ from Common.AdminAPI import AdminAPI
 
 
 class BaseClass:
-    # home_page_content = None
-    # sponsors_page_content = None
-    # about_page_content = None
-    # event_list = None
-    # site_list = None
 
     api_requests = APIRequests()
     admin = AdminAPI()
@@ -43,6 +41,7 @@ class BaseClass:
         cls.sponsors_page_content = cls.admin.get_sponsors_page_content()
         cls.sites_page_content = cls.admin.get_sites_page_content()
         cls.contact_page_content = cls.admin.get_contact_page_content()
+        cls.events_page_content = cls.admin.get_events_page_content()
 
     @pytest.fixture(scope="class", autouse=True)
     def driver(self, request):
@@ -90,17 +89,34 @@ class BaseClass:
         else:
             if browser == "edge":
                 driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()))
+                download_dir = os.path.join(project_folder, 'Resources', 'edge_download_dir')
+                params = {
+                    "behavior": "allow",
+                    "downloadPath": download_dir
+                }
+                driver.execute_cdp_cmd("Page.setDownloadBehavior", params)
             elif browser == "chrome":
                 chrome_driver_path = os.path.join(project_folder, 'Resources', 'chromedriver')
                 serv = ChromeService(chrome_driver_path)
                 driver = webdriver.Chrome(service=serv)
+                download_dir = os.path.join(project_folder, 'Resources', 'chrome_download_dir')
+                params = {
+                    "behavior": "allow",
+                    "downloadPath": download_dir
+                }
+                driver.execute_cdp_cmd("Page.setDownloadBehavior", params)
             elif browser == "firefox":
                 options = FirefoxOptions()
+                download_dir = os.path.join(project_folder, 'Resources', 'firefox_download_dir')
                 options.set_preference("browser.cache.disk.enable", False)
                 options.set_preference("network.proxy.type", 0)
+                options.set_preference("browser.download.folderList", 2)
+                options.set_preference("browser.download.dir", download_dir)
+                options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/calendar")  # MIME type for .ics
+                options.set_preference("browser.download.manager.showWhenStarting", False)
+
                 geco_driver_path = os.path.join(project_folder, 'Resources', 'geckodriver')
                 serv = FirefoxService(geco_driver_path)
-                # webdriver.DesiredCapabilities.FIREFOX['proxy'] = {"proxyType": "direct"}
                 driver = webdriver.Firefox(service=serv, options=options)
             else:
                 options = SafariOptions()
@@ -238,6 +254,39 @@ class BaseClass:
             print("Mitmproxy process did not terminate in time. Forcing termination...")
             mitmdump_process.kill()
             time.sleep(5)
+
+    @staticmethod
+    def create_download_dir(browser):
+        if browser != "safari":
+            project_folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            download_dir = os.path.join(project_folder, "Resources",  f"{browser}_download_dir")
+            os.makedirs(download_dir, exist_ok=True)
+            return download_dir
+        else:
+            default_dir = os.path.expanduser("~/Downloads")
+            return default_dir
+
+    @staticmethod
+    def get_download_file_name(url):
+        parsed_url = urlparse(url)
+        file_name = os.path.basename(parsed_url.path)
+        return f"{file_name}.ics"
+
+    @staticmethod
+    def cleanup_downloads(browser_name, download_dir, file_name):
+        if browser_name.lower() == "safari":
+            file_path = os.path.join(os.path.expanduser("~/Downloads"), file_name)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                print(f"Deleted file: {file_path}")
+            else:
+                print(f"File not found: {file_path}")
+        else:
+            if os.path.exists(download_dir):
+                shutil.rmtree(download_dir)
+                print(f"Deleted directory: {download_dir}")
+            else:
+                print(f"Directory not found: {download_dir}")
 
     @classmethod
     def scroll_to_element(cls, driver, element, browser):

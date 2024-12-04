@@ -403,6 +403,7 @@ class TestHomePage(BaseClass):
     @pytest.mark.dependency(depends=["test_22"])
     def test_25(self, driver):
         home_page_obj = HomePage(driver)
+        events_obj = Events(driver)
         events_list = self.event_list
         events_number = len(events_list.keys())
         with check, allure.step("C58403: Check event cards number"):
@@ -417,8 +418,8 @@ class TestHomePage(BaseClass):
                 break
             expected_title = event["title"]
             expected_summary = event["summary"]
-            expected_image = event["image"]
-            expected_time = home_page_obj.get_formatted_time(event["start"], event["end"])
+            expected_image = event["image"][0]
+            expected_time = events_obj.get_formatted_time(event["start"], event["end"])
             with check, allure.step(f"C58394: Check {expected_title} title"):
                 assert home_page_obj.get_event_carousel_card_title(i).strip() == expected_title.strip()
             with check, allure.step(f"C58394: Check {expected_title} description"):
@@ -438,8 +439,9 @@ class TestHomePage(BaseClass):
     @pytest.mark.dependency(depends=["test_22"])
     def test_26(self, driver):
         home_page_obj = HomePage(driver)
+        events_obj = Events(driver)
         events_list = self.event_list
-        event_order = home_page_obj.get_last_three_chronological_ordered_events(events_list)
+        event_order = events_obj.get_last_three_chronological_ordered_events(events_list)
         i = 0
         for event_title in event_order:
             with check, allure.step(f"{event_title} in in the correct position"):

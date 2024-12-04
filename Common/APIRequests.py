@@ -134,18 +134,79 @@ class APIRequests:
                 event_summary = event["attributes"]["summary"]
                 event_start = event["attributes"]["startAt"]
                 event_end = event["attributes"]["endAt"]
-                event_image = event["attributes"]["assets"][0]["url"]
-                filename = re.search(r'([^/]+?\.[a-zA-Z0-9]+)(?=\);|$)', event_image)
-                if filename:
-                    filename = filename.group(0)
+                images = []
+                for image in event["attributes"]["assets"]:
+                    filename = re.search(r'([^/]+?\.[a-zA-Z0-9]+)(?=\);|$)', image["url"])
+                    if filename:
+                        filename = filename.group(0)
+                    images.append(filename.replace("%20", " "))
                 events[event_id] = {
                     "title": event_title,
                     "summary": event_summary,
                     "start": event_start,
                     "end": event_end,
-                    "image": filename
+                    "image": images
                 }
             return events
+        else:
+            print("Request failed with status code:", response.status_code)
+            print("Response content:", response.text)
+            return None
+
+    def get_individual_event(self, event_id):
+        url = f"{API_URL}/event/{event_id}"
+        headers = {
+            "Authorization": f"Bearer {self.token}"
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            response_data = response.json()
+            event_description = ""
+            event_address = ""
+            event_opening_times = ""
+            event_booking_link = ""
+            event_id = response_data["id"]
+            event_title = response_data["attributes"]["title"]
+            event_summary = response_data["attributes"]["summary"]
+            event_start = response_data["attributes"]["startAt"]
+            event_end = response_data["attributes"]["endAt"]
+            images = []
+            for image in response_data["attributes"]["assets"]:
+                filename = re.search(r'([^/]+?\.[a-zA-Z0-9]+)(?=\);|$)', image["url"])
+                if filename:
+                    filename = filename.group(0)
+                images.append(filename.replace("%20", " "))
+            if response_data["attributes"]["description"] is not None:
+                event_description = response_data["attributes"]["description"].replace("</p>", "").replace("<p>", "")
+            if response_data["attributes"]["address"] is not None:
+                addresses = response_data["attributes"]["address"].split("\n")
+                for address in addresses:
+                    event_address = event_address + address.strip()
+                # event_address = response_data["attributes"]["address"].replace("\n", "").strip()
+            lat = response_data["attributes"]["location"]["lat"]
+            long = response_data["attributes"]["location"]["long"]
+            event_location = str(lat) + "," + str(long)
+            if response_data["attributes"]["openingTimes"] is not None:
+                times = response_data["attributes"]["openingTimes"].split("\n")
+                for time in times:
+                    event_opening_times = event_opening_times + time.strip()
+                # event_opening_times = response_data["attributes"]["openingTimes"].replace("\n", "")
+            if response_data["attributes"]["bookingLink"] is not None:
+                event_booking_link = response_data["attributes"]["bookingLink"]
+            event = {
+                "id": event_id,
+                "title": event_title,
+                "summary": event_summary,
+                "start": event_start,
+                "end": event_end,
+                "images": images,
+                "description": event_description,
+                "address": event_address,
+                "location": event_location,
+                "opening_times": event_opening_times,
+                "booking_link": event_booking_link
+            }
+            return event
         else:
             print("Request failed with status code:", response.status_code)
             print("Response content:", response.text)

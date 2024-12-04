@@ -215,3 +215,22 @@ class AdminAPI:
             print("Request failed with status code:", response.status_code)
             print("Response content:", response.text)
             return None
+
+    def get_events_page_content(self):
+        url = CMS_URL.replace("/admin", "") + ("/content-manager/single-types/api::events-page.events-page?plugins["
+                                               "i18n][locale]=en")
+        headers = {
+            "Authorization": f"Bearer {self.token}"
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            response_data = response.json()
+            content = {"heading_title": response_data["heading"]["title"],
+                       "heading_description": response_data["heading"]["description"],
+                       "section_title": response_data["sectionTitle"]["title"],
+                       "section_description": response_data["sectionTitle"]["description"]}
+            return content
+        else:
+            print("Request failed with status code:", response.status_code)
+            print("Response content:", response.text)
+            return None

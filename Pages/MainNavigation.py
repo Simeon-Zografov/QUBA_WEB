@@ -12,6 +12,7 @@ class MainNavigation:
         self.app_logo = (By.XPATH, "//a[contains(@class,'logo-link')]")
         self.home_button = (By.XPATH, "//a[.='Home']")
         self.sites_button = (By.XPATH, "//a[.='Sites']")
+        self.events_button = (By.XPATH, "//a[.='Events']")
         self.about_button = (By.XPATH, "//a[.='About']")
         self.sponsors_button = (By.XPATH, "//a[.='Sponsors']")
         self.contact_button = (By.XPATH, "//a[.='Contact']")
@@ -34,6 +35,9 @@ class MainNavigation:
 
     def click_sites_button(self):
         self.driver.find_element(*self.sites_button).click()
+
+    def click_events_button(self):
+        self.driver.find_element(*self.events_button).click()
 
     def click_about_button(self):
         self.driver.find_element(*self.about_button).click()
