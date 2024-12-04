@@ -62,6 +62,12 @@ class BaseClass:
                 options.add_argument("--disable-infobars")
                 serv = EdgeService(EdgeChromiumDriverManager().install())
                 driver = webdriver.Edge(service=serv, options=options)
+                download_dir = os.path.join(project_folder, 'Resources', 'edge_download_dir')
+                params = {
+                    "behavior": "allow",
+                    "downloadPath": download_dir
+                }
+                driver.execute_cdp_cmd("Page.setDownloadBehavior", params)
             elif browser == "chrome":
                 options = ChromeOptions()
                 options.add_argument("--headless")
@@ -73,11 +79,22 @@ class BaseClass:
                 chrome_driver_path = "/usr/bin/chromedriver"
                 serv = ChromeService(chrome_driver_path)
                 driver = webdriver.Chrome(service=serv, options=options)
+                download_dir = os.path.join(project_folder, 'Resources', 'chrome_download_dir')
+                params = {
+                    "behavior": "allow",
+                    "downloadPath": download_dir
+                }
+                driver.execute_cdp_cmd("Page.setDownloadBehavior", params)
             elif browser == "firefox":
+                download_dir = os.path.join(project_folder, 'Resources', 'firefox_download_dir')
                 options = FirefoxOptions()
                 options.add_argument("--headless")
                 options.set_preference("browser.cache.disk.enable", False)
                 options.set_preference("network.proxy.type", 0)
+                options.set_preference("browser.download.folderList", 2)
+                options.set_preference("browser.download.dir", download_dir)
+                options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/calendar")
+                options.set_preference("browser.download.manager.showWhenStarting", False)
                 geckodriver_driver_path = "/usr/bin/geckodriver"
                 serv = FirefoxService(geckodriver_driver_path)
                 # webdriver.DesiredCapabilities.FIREFOX['proxy'] = {"proxyType": "direct"}
@@ -112,7 +129,7 @@ class BaseClass:
                 options.set_preference("network.proxy.type", 0)
                 options.set_preference("browser.download.folderList", 2)
                 options.set_preference("browser.download.dir", download_dir)
-                options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/calendar")  # MIME type for .ics
+                options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/calendar")
                 options.set_preference("browser.download.manager.showWhenStarting", False)
 
                 geco_driver_path = os.path.join(project_folder, 'Resources', 'geckodriver')
