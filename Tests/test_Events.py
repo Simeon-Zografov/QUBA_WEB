@@ -1,4 +1,5 @@
 import os
+import subprocess
 import time
 from datetime import datetime
 import allure
@@ -19,6 +20,7 @@ class TestEvents(BaseClass):
     event_without_booking_link = {}
 
     @severity(severity_level.CRITICAL)
+    @allure.tag(BaseClass.current_browser)
     @allure.feature('Events')
     @allure.title("User is navigated to the Events page")
     @allure.issue("QP-267", "Story QP-267")
@@ -346,6 +348,22 @@ class TestEvents(BaseClass):
         file_path = os.path.join(download_dir, file_name)
         events_obj.click_single_event_add_to_calendar_link()
 
+        if self.current_browser == "safari":
+            pytest.skip("Safari denies automatic file downloads. Review on self-hosted runner")
+            # try:
+            #     time.sleep(2)
+            #     script = '''
+            #         tell application "System Events"
+            #             tell process "Safari"
+            #                 key code 36 -- Key code for "Return"
+            #             end tell
+            #         end tell
+            #         '''
+            #     subprocess.run(["osascript", "-e", script], check=True)
+            #     print("Clicked 'Allow' button successfully.")
+            # except subprocess.CalledProcessError as e:
+            #     print(f"Failed to click 'Allow': {e}")
+
         cond = False
         for _ in range(10):
             if os.path.exists(file_path):
@@ -363,8 +381,6 @@ class TestEvents(BaseClass):
                 file_content["INNER-" + line_content[0]] = line_content[1].replace("\n", "")
             else:
                 file_content[line_content[0]] = line_content[1].replace("\n", "")
-
-        print(file_content)
 
         with check, allure.step("C58500: Downloaded file is a valid ICS file"):
             assert file_content["BEGIN"] == "VCALENDAR"

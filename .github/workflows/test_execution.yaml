@@ -347,11 +347,6 @@ jobs:
         with:
           repository: Simeon-Zografov/QUBA_WEB
 
-      - name: Setup SafariDriver
-        run: |
-          safaridriver --enable
-          defaults write com.apple.Safari AutoOpenSafeDownloads -bool true
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
