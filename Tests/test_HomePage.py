@@ -533,13 +533,13 @@ class TestHomePage(BaseClass):
         with check, allure.step("Successful language change"):
             main_nav_obj.click_language_switch_button()
             main_nav_obj.click_language_button()
-            if self.current_browser == "safari":
+            if self.current_browser == "safari" or self.current_browser == "firefox":
                 time.sleep(2)
             assert main_nav_obj.get_page_language() == "ar-SA"
         with check, allure.step("Switch back to English"):
             main_nav_obj.click_language_switch_button()
             main_nav_obj.click_language_button()
-            if self.current_browser == "safari":
+            if self.current_browser == "safari" or self.current_browser == "firefox":
                 time.sleep(2)
             assert main_nav_obj.get_page_language() == "en-US"
 
