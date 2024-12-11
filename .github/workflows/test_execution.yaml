@@ -457,7 +457,7 @@ jobs:
         if: always()
         with:
           gh_pages: gh-pages
-          allure_history: history
+          allure_history: allure-history
           allure_results: allure-results
 
 #      - name: Copy previous history data
