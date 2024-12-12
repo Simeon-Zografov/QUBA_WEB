@@ -441,16 +441,29 @@ jobs:
           repository: Simeon-Zografov/QUBA_WEB
           ref: gh_pages
 
+      - name: Setup history directory
+        run: |
+          mkdir -p allure-results
+          mkdir -p allure-history
+
 #      - name: Install allure
 #        run: |
 #          npm install -g allure-commandline
 
       - name: Merge individual reports
         run: |
-          mkdir -p allure-results
+#          mkdir -p allure-results
           for browser_dir in results-*; do
             cp -r "$browser_dir"/* allure-results/
           done
+
+      - name: Retrieve existing history
+        run: |
+          if [ -d "allure-history" ]; then
+            cp -r allure-history/last-history allure-results/history
+          else
+            echo "No previous history found. Skipping."
+          fi
 
       - name: Build test report
         uses: simple-elf/allure-report-action@v1.7
@@ -459,6 +472,11 @@ jobs:
           gh_pages: gh-pages
           allure_history: allure-history
           allure_results: allure-results
+
+      - name: Update allure-history with new history
+        run: |
+          mkdir -p allure-history/last-history
+          cp -r allure-results/history allure-history/last-history
 
 #      - name: Copy previous history data
 #        run: |
