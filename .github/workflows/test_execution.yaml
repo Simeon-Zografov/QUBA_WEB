@@ -454,7 +454,7 @@ jobs:
       - name: Merge individual reports
         run: |
           ls
-          mkdir -p allure-results
+          mkdir -p gh_pages/allure-results
           for browser_dir in gh_pages/results-*; do
             cp -r "$browser_dir"/* gh_pages/allure-results/
           done
