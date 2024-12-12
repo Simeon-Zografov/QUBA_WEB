@@ -470,7 +470,7 @@ jobs:
         if: always()
         with:
           gh_pages: gh-pages
-          allure_history: allure-report
+          allure_history: .
           allure_results: allure-results
 
 #      - name: Update allure-history with new history
