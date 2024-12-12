@@ -452,7 +452,7 @@ jobs:
 
       - name: Merge individual reports
         run: |
-          mkdir -p allure_results
+          mkdir -p allure-results
           for browser_dir in results-*; do
             cp -r "$browser_dir"/* allure-results/
           done
