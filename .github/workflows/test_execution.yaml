@@ -440,6 +440,7 @@ jobs:
         with:
           repository: Simeon-Zografov/QUBA_WEB
           ref: gh_pages
+          path: gh_pages
 
 #      - name: Setup history directory
 #        run: |
@@ -459,10 +460,10 @@ jobs:
           done
           ls
 
-      - name: Update allure-results folder permissions
-        run: |
-         chmod 777 -R allure-results
-          ls
+#      - name: Update allure-results folder permissions
+#        run: |
+#         chmod 777 -R allure-results
+#          ls
 
 #      - name: Retrieve existing history
 #        run: |
