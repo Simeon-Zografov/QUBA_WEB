@@ -469,7 +469,7 @@ jobs:
         if: always()
         with:
           gh_pages: gh-pages
-          allure_history: allure-history
+          allure_history: allure-report
           allure_results: allure-results
 
       - name: Update allure-history with new history
@@ -508,4 +508,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh_pages
-          publish_dir: .
+          publish_dir: allure-report
