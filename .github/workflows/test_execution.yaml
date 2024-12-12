@@ -454,8 +454,8 @@ jobs:
       - name: Merge individual reports
         run: |
           echo "Removing previous allure-results"
-          rm -rf allure-results
-          rm -rf gh_pages/allure-results
+          sudo rm -rf allure-results
+          sudo rm -rf gh_pages/allure-results
           mkdir -p gh_pages/allure-results
           for browser_dir in gh_pages/results-*; do
             cp -r "$browser_dir"/* gh_pages/allure-results/
@@ -542,3 +542,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh_pages
           publish_dir: allure-history
+
+      - name: Debugging after report generation
+        run: |
+          echo "Contents of gh_pages directory:"
+          ls -la gh_pages
