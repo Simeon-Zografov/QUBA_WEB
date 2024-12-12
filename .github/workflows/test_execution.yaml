@@ -441,9 +441,9 @@ jobs:
           repository: Simeon-Zografov/QUBA_WEB
           ref: gh_pages
 
-      - name: Install allure
-        run: |
-          npm install -g allure-commandline
+#      - name: Install allure
+#        run: |
+#          npm install -g allure-commandline
 
       - name: Merge individual reports
         run: |
