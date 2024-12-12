@@ -510,12 +510,21 @@ jobs:
       - name: Clean up temporary directories
         run: |
           echo "Final cleanup of temporary directories"
-          cd gh_pages
-          rm -rf gh_pages/allure-results
-          rm -rf allure-results
-          rm -rf gh_pages/results-*
+          ls -la
+          sudo rm -rf gh_pages/allure-results
+          sudo rm -rf allure-results
+          sudo rm -rf gh_pages/results-*
           echo "Contents of gh_pages after cleanup:"
           ls -la gh_pages
+
+      - name: Confirm removal of allure-results
+        run: |
+          if [ -d "gh_pages/allure-results" ]; then
+            echo "Directory still exists"
+            ls -la gh_pages/allure-results
+          else
+            echo "Directory successfully removed"
+          fi
 #
 #      - name: Commit and push consolidated report to gh_pages
 #        run: |
