@@ -455,10 +455,13 @@ jobs:
         run: |
           ls
           mkdir -p gh_pages/allure-results
+          ls
+          ls gh_pages
           for browser_dir in gh_pages/results-*; do
             cp -r "$browser_dir"/* gh_pages/allure-results/
           done
           ls
+          ls gh_pages
 
 #      - name: Update allure-results folder permissions
 #        run: |
