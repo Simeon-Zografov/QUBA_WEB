@@ -502,19 +502,20 @@ jobs:
 #        run: |
 #          allure generate allure-results --clean -o allure-report
 #
-      - name: Final cleanup of temporary directories
+      - name: Debugging after report generation
         run: |
-          echo "Cleaning up files from gh_pages..."
-          rm -rf gh_pages/allure-results
-          rm -rf gh_pages/results-*
-          git add -u # Stage deletions for commit
-          git status # Confirm files to be deleted
-
-      - name: Check files before publishing
-        run: |
-          echo "Files to be committed:"
+          echo "Contents of gh_pages directory:"
           ls -la gh_pages
-          git status
+
+      - name: Clean up temporary directories
+        run: |
+          echo "Final cleanup of temporary directories"
+          cd gh_pages
+          rm -rf gh_pages/allure-results
+          rm -rf allure-results
+          rm -rf gh_pages/results-*
+          echo "Contents of gh_pages after cleanup:"
+          ls -la gh_pages
 #
 #      - name: Commit and push consolidated report to gh_pages
 #        run: |
