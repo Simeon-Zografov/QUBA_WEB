@@ -462,6 +462,9 @@ jobs:
           done
           ls
           ls gh_pages
+          mkdir -p gh_pages/allure-results/history
+          rm -rf results-*
+          ls gh_pages
 
 #      - name: Update allure-results folder permissions
 #        run: |
