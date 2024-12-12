@@ -517,6 +517,7 @@ jobs:
           sudo rm -rf gh_pages/allure-results
           sudo rm -rf allure-results
           sudo rm -rf gh_pages/results-*
+          sudo rm -rf allure-history/allure-results
           echo "Contents of gh_pages after cleanup:"
           ls -la
           ls -la allure-history
