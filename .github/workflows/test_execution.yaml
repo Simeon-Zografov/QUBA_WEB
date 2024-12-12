@@ -457,13 +457,13 @@ jobs:
             cp -r "$browser_dir"/* allure-results/
           done
 
-#      - name: Retrieve existing history
-#        run: |
-#          if [ -d "last-history" ]; then
-#            cp -r last-history allure-results/history
-#          else
-#            echo "No previous history found. Skipping."
-#          fi
+      - name: Retrieve existing history
+        run: |
+          if [ -d "last-history" ]; then
+            cp -r last-history allure-results/history
+          else
+            echo "No previous history found. Skipping."
+          fi
 
       - name: Build test report
         uses: simple-elf/allure-report-action@v1.7
