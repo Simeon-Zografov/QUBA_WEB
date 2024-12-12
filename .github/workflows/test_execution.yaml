@@ -464,11 +464,7 @@ jobs:
           done
           mkdir -p gh_pages/allure-results/history
           echo "Cleaning up results directories"
-          ls -la gh_pages
-          ls -la gh_pages/allure-results
           rm -rf gh_pages/results-*
-          ls -la gh_pages
-          ls -la gh_pages/allure-results
 
 #      - name: Update allure-results folder permissions
 #        run: |
@@ -512,7 +508,6 @@ jobs:
         run: |
           echo "Contents of gh_pages directory:"
           ls -la gh_pages
-          ls -la gh_pages/allure-results
 
       - name: Clean up temporary directories
         run: |
@@ -522,7 +517,6 @@ jobs:
           sudo rm -rf gh_pages/results-*
           echo "Contents of gh_pages after cleanup:"
           ls -la gh_pages
-          ls -la gh_pages/allure-results
 
       - name: Confirm removal of allure-results
         run: |
@@ -554,4 +548,3 @@ jobs:
         run: |
           echo "Contents of gh_pages directory:"
           ls -la gh_pages
-          ls -la gh_pages/allure-results
