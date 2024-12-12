@@ -452,14 +452,17 @@ jobs:
 
       - name: Merge individual reports
         run: |
+          ls
           mkdir -p allure-results
           for browser_dir in results-*; do
             cp -r "$browser_dir"/* allure-results/
           done
+          ls
 
       - name: Update allure-results folder permissions
         run: |
          chmod 777 -R allure-results
+          ls
 
 #      - name: Retrieve existing history
 #        run: |
