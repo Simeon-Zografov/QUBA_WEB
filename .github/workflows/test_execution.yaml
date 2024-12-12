@@ -454,8 +454,12 @@ jobs:
         run: |
           mkdir -p allure_results
           for browser_dir in results-*; do
-            cp -r "$browser_dir"/* allure_results/
+            cp -r "$browser_dir"/* allure-results/
           done
+
+      - name: Update allure-results folder permissions
+        run: |
+         chmod 777 -R allure-results
 
 #      - name: Retrieve existing history
 #        run: |
@@ -471,7 +475,8 @@ jobs:
         with:
           gh_pages: gh-pages
           allure_history: allure-history
-          allure_results: allure_results
+          allure_results: allure-results
+          allure_report: allure-report
 
 #      - name: Update allure-history with new history
 #        run: |
@@ -509,4 +514,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh_pages
-          publish_dir: allure-report
+          publish_dir: allure-history
