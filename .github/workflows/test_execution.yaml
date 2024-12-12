@@ -453,20 +453,14 @@ jobs:
 
       - name: Merge individual reports
         run: |
-          ls
+          rm -rf allure-results
+          rm -rf gh_pages/allure-results
           mkdir -p gh_pages/allure-results
-          ls
-          ls gh_pages
           for browser_dir in gh_pages/results-*; do
             cp -r "$browser_dir"/* gh_pages/allure-results/
           done
-          ls
-          ls gh_pages
-          ls gh_pages/allure-results/
           mkdir -p gh_pages/allure-results/history
           rm -rf gh_pages/results-*
-          ls gh_pages
-          ls gh_pages/allure-results/
 
 #      - name: Update allure-results folder permissions
 #        run: |
@@ -509,6 +503,7 @@ jobs:
       - name: Clean up temporary directories
         run: |
           rm -rf gh_pages/allure-results
+          rm -rf allure-results
           rm -rf gh_pages/results-*
 #
 #      - name: Commit and push consolidated report to gh_pages
