@@ -454,7 +454,6 @@ jobs:
       - name: Merge individual reports
         run: |
           ls -la gh_pages
-          ls -la gh_pages/allure-results
           echo "Removing previous allure-results"
           sudo rm -rf allure-results
           sudo rm -rf gh_pages/allure-results
@@ -465,6 +464,7 @@ jobs:
           mkdir -p gh_pages/allure-results/history
           echo "Cleaning up results directories"
           rm -rf gh_pages/results-*
+          ls -la
 
 #      - name: Update allure-results folder permissions
 #        run: |
@@ -507,6 +507,7 @@ jobs:
       - name: Debugging after report generation
         run: |
           echo "Contents of gh_pages directory:"
+          ls -la
           ls -la gh_pages
 
       - name: Clean up temporary directories
@@ -516,6 +517,7 @@ jobs:
           sudo rm -rf allure-results
           sudo rm -rf gh_pages/results-*
           echo "Contents of gh_pages after cleanup:"
+          ls -la
           ls -la gh_pages
 
       - name: Confirm removal of allure-results
@@ -547,4 +549,5 @@ jobs:
       - name: Debugging after report generation
         run: |
           echo "Contents of gh_pages directory:"
+          ls -la
           ls -la gh_pages
