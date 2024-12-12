@@ -451,18 +451,6 @@ jobs:
 #        run: |
 #          npm install -g allure-commandline
 
-      - name: Remove allure-results
-        run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b gh_pages || git checkout gh_pages
-          git pull origin gh_pages --rebase
-          rm -rf allure-results/*
-          rm -rf gh_pages/allure-results/*
-          git add allure-results
-          git commit -m "Remove allure-results"
-          git push origin gh_pages
-
       - name: Merge individual reports
         run: |
           ls -la gh_pages
