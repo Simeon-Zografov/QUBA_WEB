@@ -476,10 +476,10 @@ jobs:
         uses: simple-elf/allure-report-action@master
         if: always()
         with:
-          gh_pages: gh-pages
+          gh_pages: gh_pages
           allure_history: allure-history
           allure_results: allure-results
-          allure_report: allure-report
+          keep_reports: 20
 
 #      - name: Update allure-history with new history
 #        run: |
