@@ -40,6 +40,7 @@ on:
           - 'Contact Page'
           - 'Sponsors Page'
           - 'Events page'
+          - 'Accessibility'
 
 jobs:
   chrome-test:
@@ -105,6 +106,8 @@ jobs:
               pytest Tests/test_SponsorsPage.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Events page' ]; then
               pytest Tests/test_Events.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'Accessibility' ]; then
+              pytest Tests/test_Accessibility.py
             else
               echo "Invalid option"
             fi
@@ -202,6 +205,8 @@ jobs:
               pytest Tests/test_SponsorsPage.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Events page' ]; then
               pytest Tests/test_Events.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'Accessibility' ]; then
+              pytest Tests/test_Accessibility.py
             else
               echo "Invalid option"
             fi
@@ -299,6 +304,8 @@ jobs:
               pytest Tests/test_SponsorsPage.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Events page' ]; then
               pytest Tests/test_Events.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'Accessibility' ]; then
+              pytest Tests/test_Accessibility.py
             else
               echo "Invalid option"
             fi
@@ -395,6 +402,8 @@ jobs:
               pytest Tests/test_SponsorsPage.py
             elif [ "${{ github.event.inputs.test_options }}" == 'Events page' ]; then
               pytest Tests/test_Events.py
+            elif [ "${{ github.event.inputs.test_options }}" == 'Accessibility' ]; then
+              pytest Tests/test_Accessibility.py
             else
               echo "Invalid option"
             fi
