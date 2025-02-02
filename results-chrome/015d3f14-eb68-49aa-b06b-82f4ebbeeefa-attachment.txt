@@ -1,0 +1,59 @@
+Found 4 accessibility violations:
+
+
+Rule Violated:
+duplicate-id - Ensures every id attribute value is unique
+	URL: https://dequeuniversity.com/rules/axe/3.1/duplicate-id?application=axeAPI
+	Impact Level: minor
+	Tags: cat.parsing wcag2a wcag411
+	Elements Affected:
+	1) Target: section:nth-child(3) > .app-carousel[data-v-7b4b4d14=""] > .deck-container[data-v-7b4b4d14=""] > .card-deck[data-v-7b4b4d14=""]
+		Document has multiple static elements with the same id attribute
+
+
+
+
+
+Rule Violated:
+heading-order - Ensures the order of headings is semantically correct
+	URL: https://dequeuniversity.com/rules/axe/3.1/heading-order?application=axeAPI
+	Impact Level: moderate
+	Tags: cat.semantics best-practice
+	Elements Affected:
+	1) Target: section:nth-child(3) > .app-carousel[data-v-7b4b4d14=""] > .deck-container[data-v-7b4b4d14=""] > .card-deck[data-v-7b4b4d14=""] > .card.app-carousel-card[data-v-7b4b4d14=""]:nth-child(1) > .card-body[data-v-4ad32e25=""] > h4
+		Heading order invalid
+	2) Target: section:nth-child(4) > .app-carousel[data-v-7b4b4d14=""] > .deck-container[data-v-7b4b4d14=""] > .card-deck[data-v-7b4b4d14=""] > .card.app-carousel-card[data-v-7b4b4d14=""]:nth-child(1) > .card-body[data-v-4ad32e25=""] > h4
+		Heading order invalid
+
+
+
+
+
+Rule Violated:
+link-name - Ensures links have discernible text
+	URL: https://dequeuniversity.com/rules/axe/3.1/link-name?application=axeAPI
+	Impact Level: serious
+	Tags: cat.name-role-value wcag2a wcag412 wcag244 section508 section508.22.a
+	Elements Affected:
+	1) Target: .logo-link
+		Element does not have text that is visible to screen readers
+		aria-label attribute does not exist or is empty
+		aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty
+		Element's default semantics were not overridden with role="presentation"
+		Element's default semantics were not overridden with role="none"
+		Element is in tab order and does not have accessible text
+
+
+
+
+
+Rule Violated:
+region - Ensures all page content is contained by landmarks
+	URL: https://dequeuniversity.com/rules/axe/3.1/region?application=axeAPI
+	Impact Level: moderate
+	Tags: cat.keyboard best-practice
+	Elements Affected:
+	1) Target: html
+		Some page content is not contained by landmarks
+
+
